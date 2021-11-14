@@ -1,0 +1,33 @@
+
+
+body {
+	font-family: 'Neuton', serif;
+}
+
+h1 {
+	font-size: 36px;
+	color: #825a5a;
+	margin-top: 40px;
+}
+
+h2 {
+	color: #94a97a;
+	font-size: 24px;
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+
+#chessboard_pieces_container {
+	width: 50%;
+	padding-top: 50%; /* 1:1 Aspect Ratio */
+	position: relative; /* If you want text inside of it */
+}
+#chessboard_pieces {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+}
