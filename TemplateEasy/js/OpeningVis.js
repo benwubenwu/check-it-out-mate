@@ -71,6 +71,30 @@ class OpeningVis {
 			.attr("y", -50)
 			.attr("text-anchor", "middle")
             .text("Percentage of Games Played");
+        
+        vis.minRating = d3.min(vis.data, d=>d.white_rating);
+        vis.maxRating = d3.max(vis.data, d=>d.white_rating);
+        
+        vis.slider = d3.sliderBottom();
+        vis.slider
+            .min(vis.minRating)
+            .max(vis.maxRating)
+            .width(300)
+            .default([vis.minRating, vis.maxRating])
+            .fill('#2196f3')
+            .on('onchange', val => {
+                vis.wrangleData();
+            });
+
+        var sliderArea = d3
+            .select('#opening-vis-slider')
+            .append('svg')
+            .attr('width', 500)
+            .attr('height', 100)
+            .append('g')
+            .attr('transform', 'translate(20, 20)');
+
+        sliderArea.call(vis.slider);
         // (Filter, aggregate, modify data)
         vis.wrangleData();
     }
@@ -86,8 +110,13 @@ class OpeningVis {
         vis.data.forEach(d => {
             vis.openingEcoToOpeningName[d.opening_eco] = d.opening_name;
         })
-        console.log(vis.openingEcoToOpeningName)
-        vis.displayData = d3.rollup(vis.data, v => v.length, d => d.opening_eco)
+
+        let arr = vis.slider.value();
+        vis.minRating = arr[0]
+        vis.maxRating = arr[1]
+
+        vis.displayData = vis.data.filter(d => d.white_rating >= vis.minRating && d.white_rating <= vis.maxRating);
+        vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.opening_eco)
 
         vis.displayData = Array.from(vis.displayData, ([name, value]) => ({ name, value }));
         vis.displayData.sort((a, b) => b.value - a.value);
@@ -95,8 +124,6 @@ class OpeningVis {
         vis.displayData.forEach(d => vis.sum += d.value);
 
         vis.displayData = vis.displayData.slice(0, 15)
-
-        
         // Update the visualization
         vis.updateVis();
     }
@@ -118,7 +145,7 @@ class OpeningVis {
 
         bars.enter().append("rect")
             .attr("class", "bar")
-
+            .attr("fill", "#93bebf")
             .merge(bars)
             .transition()
             .attr("width", vis.x.bandwidth())
@@ -146,8 +173,6 @@ class OpeningVis {
             .attr("transform", function (d) {
                 return "rotate(-45)"
             });
-
-        // console.log(vis.metaData);
     }
 
 
