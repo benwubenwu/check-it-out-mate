@@ -253,12 +253,10 @@ class Chessboard {
 }
 
 function startingPositions (piece) {
-    console.log(piece)
     let x_pos,y_pos;
     let cells = document.getElementsByClassName("cell");
     piece.StartingPositions.forEach(pos => {
         let cell = document.getElementById(pos);
-        console.log(cell)
 
     })
     // loop through the chessboard

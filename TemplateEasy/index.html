@@ -26,7 +26,10 @@
         </div>
     </div>
     <div class="row">
-        <p>Storyboard Stuff goes here</p>
+        <p>You're an aspiring chess player, seeks to learn more about the history of chess-playing. You want to know who the best chess players have been over time, and what the best chess strategies might be. You also wants to know if people have become more interested in chess since the onset of the pandemic, and whether this game is a valuable time investment for yourself. </p>
+    </div>
+    <div class="row">
+        <p>An interactive chess board allows you to hover over any particular chess piece, and quickly (and easily), understand the basic functionality associated with that particular chess piece. </p>
     </div>
     <div class="row">
         <div id="chessboard_pieces_container" class="col-md-12">
@@ -35,15 +38,26 @@
     </div>
     <div class="row">
         <p>
-            This visualization is about something.
+            Thanks to team Check it Out, it is easy to easily conceptualize the best chess moves in a number of different situations, in particular, chess openings, a part of the game that many find themselves struggling to perform well in. 
         </p>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label>Rating</label>
+            <div class="row">
+                <div class="col">
+                    <div id="opening-vis-slider"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
     </div>
     <div class="row">
         <div id="opening-vis"></div>
     </div>
     <div class="row">
         <p>
-            More storyboard stuff
+            Now that you have become familiarized with game of chess, you may want to learn more about the history of the top chess players.
         </p>
     </div>
     <div class="row">
@@ -63,7 +77,7 @@
         </div>
     </div>
     <div class="row">
-        <p>Story board stuff</p>
+        <p>Here's a visulization to learn more about the different countries that play chess.</p>
     </div>
 
     <div class="row">
@@ -92,6 +106,12 @@
         </div>
     </div>
 
+    <div class="row">
+        <p>
+            After using team Check it out Mate's storyboard, we hope you feel a lot more comfortable as a chess player individually. We hope you are excited to share your newfound knowledge and experience with your friends, and introduce more people to the world of chess. 
+        </p>
+    </div>
+
 </div>
 
 <!-- Load JS libraries -->
@@ -101,18 +121,17 @@
 
 <!-- d3 -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
-
+<script src="https://unpkg.com/d3-simple-slider"></script>
+<link href="js/nouislider/distribute/nouislider.css" rel="stylesheet">
+<script src="./js/nouislider/distribute/nouislider.min.js"></script>
 
 <!-- Visualization objects -->
 <script src="js/chessboard.js"></script>
 <script src="js/OpeningVis.js"></script>
 <script src="js/PlayerVis.js"></script>
-<link href="js/nouislider/distribute/nouislider.css" rel="stylesheet">
-<script src="./js/nouislider/distribute/nouislider.min.js"></script>
 <script src="js/CountryVis.js"></script>
 
 <!-- Load data, create visualizations -->
 <script src="js/main.js"></script>
-<script src="https://unpkg.com/d3-simple-slider"></script>
 </body>
 </html>

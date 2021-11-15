@@ -52,7 +52,6 @@ class CountryVis {
     }
 
     showEdition(d) {
-        console.log(d)
         document.getElementById("title").innerHTML = "Country: " + d.country;
         document.getElementById('winner').innerText = "Rating: " + d.rating_standard;
         document.getElementById('year').innerText = "Year: " + d.year.getFullYear();
@@ -68,9 +67,7 @@ class CountryVis {
 
     const values = range.noUiSlider.get()
 
-    console.log(values)
     if (values != undefined) {
-        console.log(values)
         filtered_data = vis.data.filter(d => d.year >= parseYear(parseInt(values[0])) && d.year <= parseYear(parseInt(values[1])))
     }
 
@@ -79,7 +76,6 @@ class CountryVis {
     }
 
     document.getElementById('start').innerText = ("Start: " + formatDate(d3.min(filtered_data, d => {
-        // console.log(d.year);
         return d.year
     })))
     document.getElementById('end').innerText = ("End: " + formatDate(d3.max(filtered_data, d => d.year)))

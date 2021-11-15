@@ -156,7 +156,6 @@ class PlayerVis {
         // https://www.d3-graph-gallery.com/graph/line_several_group.html
         var sumstat = d3.group(vis.filteredData, d => d.name);
 
-        console.log(sumstat)
         const color = d3.scaleOrdinal()
             .range([ 
                     '#1f77b4',
