@@ -52,11 +52,11 @@ class OpeningVis {
             .tickFormat(percentFormatter);
 
         vis.svg.append("g")
-            .attr("class", "x-axis axis")
+            .attr("class", "opening-x-axis")
             .attr("transform", "translate(0," + vis.height + ")");
 
         vis.svg.append("g")
-            .attr("class", "y-axis axis");
+            .attr("class", "opening-y-axis");
 
         // Axis title
         vis.svg.append("text")
@@ -162,9 +162,9 @@ class OpeningVis {
         bars.exit().remove();
 
         // Call axis function with the new domain
-        vis.svg.select(".y-axis").call(vis.yAxis);
+        vis.svg.select(".opening-y-axis").call(vis.yAxis);
         // TODO: adjust axis labels
-        vis.svg.select(".x-axis").call(vis.xAxis)
+        vis.svg.select(".opening-x-axis").call(vis.xAxis)
             .selectAll("text")
             .text(d => vis.openingEcoToOpeningName[d])
             .style("text-anchor", "end")
