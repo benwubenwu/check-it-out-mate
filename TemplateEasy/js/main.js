@@ -7,6 +7,8 @@ let formatDate = d3.timeFormat("%Y");
 let parseDate = d3.timeParse("%d-%m-%y");
 let parseYear = d3.timeParse("%Y");
 
+let FICSparseDate = d3.timeParse("%Y.%m.%d")
+
 let chessBoard = [
     [0,1,0,1,0,1,0,1],
     [1,0,1,0,1,0,1,0],
@@ -86,16 +88,16 @@ function loadPlayerData() {
 }
 
 function loadOpeningData() {
-	d3.csv("data/games.csv", row => {
-        row.created_at = +row.created_at;
+	d3.csv("data/fics_1999_2020.csv", row => {
+        row.date = FICSparseDate(row.date);
         row.last_move_at = +row.last_move_at;
         row.turns = +row.turns;
-        row.white_rating = +row.white_rating;
-        row.black_rating = +row.black_rating;
+        row.white_elo = +row.white_elo;
+        row.black_elo = +row.black_elo;
         row.opening_ply = +row.opening_ply;
 		return row
 	}).then(csv => {
-		console.log(csv)
+		console.log("opening data:", csv)
 		// Store csv in a global variable
 		openingData = csv;
 		openingVis = new OpeningVis('opening-vis', openingData);

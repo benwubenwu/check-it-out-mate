@@ -62,7 +62,7 @@ class OpeningVis {
         vis.svg.append("text")
             .attr("x", -50)
             .attr("y", -8)
-            .text("Most Popular Openings from Lichess.org");
+            .text("Most Popular Openings from Free Internet Chess Server (FICS) Games Database");
 
         vis.svg.append("text")
             .attr("class", "y-label")
@@ -72,8 +72,11 @@ class OpeningVis {
 			.attr("text-anchor", "middle")
             .text("Percentage of Games Played");
         
-        vis.minRating = d3.min(vis.data, d=>d.white_rating);
-        vis.maxRating = d3.max(vis.data, d=>d.white_rating);
+        vis.minRating = d3.min(vis.data, d=>d.white_elo);
+        vis.maxRating = d3.max(vis.data, d=>d.white_elo);
+
+        vis.minDate = d3.min(vis.data, d => d.date);
+        vis.maxDate = d3.max(vis.data, d => d.date);
         
         vis.slider = d3.sliderBottom();
         vis.slider
@@ -95,6 +98,27 @@ class OpeningVis {
             .attr('transform', 'translate(20, 20)');
 
         sliderArea.call(vis.slider);
+
+        vis.timeSlider = d3.sliderBottom();
+        vis.timeSlider
+            .min(vis.minDate)
+            .max(vis.maxDate)
+            .width(300)
+            .default([vis.minDate, vis.maxDate])
+            .fill('#2196f3')
+            .on('onchange', val => {
+                vis.wrangleData();
+            });
+
+        var timeSliderArea = d3
+            .select('#opening-vis-slider')
+            .append('svg')
+            .attr('width', 500)
+            .attr('height', 100)
+            .append('g')
+            .attr('transform', 'translate(20, 20)');
+
+        timeSliderArea.call(vis.timeSlider);
         // (Filter, aggregate, modify data)
         vis.wrangleData();
     }
@@ -108,15 +132,20 @@ class OpeningVis {
         let vis = this;
         vis.openingEcoToOpeningName = {};
         vis.data.forEach(d => {
-            vis.openingEcoToOpeningName[d.opening_eco] = d.opening_name;
+            vis.openingEcoToOpeningName[d.eco] = d.name;
         })
 
         let arr = vis.slider.value();
         vis.minRating = arr[0]
         vis.maxRating = arr[1]
 
-        vis.displayData = vis.data.filter(d => d.white_rating >= vis.minRating && d.white_rating <= vis.maxRating);
-        vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.opening_eco)
+        let timeArr = vis.timeSlider.value();
+        vis.minDate = timeArr[0];
+        vis.maxDate = timeArr[1];
+
+        vis.displayData = vis.data.filter(d => d.white_elo >= vis.minRating && d.white_elo <= vis.maxRating);
+        vis.displayData = vis.displayData.filter(d => d.date >= vis.minDate && d.date <= vis.maxDate);
+        vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.name)
 
         vis.displayData = Array.from(vis.displayData, ([name, value]) => ({ name, value }));
         vis.displayData.sort((a, b) => b.value - a.value);
@@ -166,7 +195,7 @@ class OpeningVis {
         // TODO: adjust axis labels
         vis.svg.select(".opening-x-axis").call(vis.xAxis)
             .selectAll("text")
-            .text(d => vis.openingEcoToOpeningName[d])
+            .text(d => d)
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
