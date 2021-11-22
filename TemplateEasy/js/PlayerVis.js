@@ -23,7 +23,7 @@ class PlayerVis {
     initVis() {
         let vis = this;
         // SVG drawing area
-        let margin = {top: 40, right: 150, bottom: 60, left: 60};
+        let margin = {top: 40, right: 200, bottom: 60, left: 60};
 
         vis.width = 600 - margin.left - margin.right,
                 vis.height = 500 - margin.top - margin.bottom;
