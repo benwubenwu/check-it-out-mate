@@ -43,25 +43,38 @@
     </div>
     <div class="row">
         <div class="col">
-            <label>Rating</label>
             <div class="row">
                 <div class="col">
-                    <div id="opening-vis-slider"></div>
+                    <div class="row">
+                        <div id="opening-vis-slider"></div>
+                        <div id="opening-vis-time-slider"></div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col">
-            <label>Time Period</label>
-            <div class="row">
-                <div class="col">
-                    <div id="opening-vis-time-slider"></div>
-                </div>
+                
             </div>
         </div>
     </div>
     <div class="row">
-        <div id="opening-vis"></div>
+        <div class="col">
+            <div id="opening-vis-white"></div>
+        </div>
+        <div id="chessboard_pieces_container" class="col-md-12">
+            <div id="opening-moves-vis-white"></div>
+        </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <div id="opening-vis-black"></div>
+        </div>
+        <div id="chessboard_pieces_container" class="col-md-12">
+            <div id="opening-moves-vis-black"></div>
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div id="chessboard_pieces_container" class="col-md-12">
+            <div id="opening-moves-vis"></div>
+        </div>
+    </div> -->
     <div class="row">
         <p>
             Now that you have become familiarized with game of chess, you may want to learn more about the history of the top chess players.
@@ -137,6 +150,7 @@
 <script src="js/OpeningVis.js"></script>
 <script src="js/PlayerVis.js"></script>
 <script src="js/CountryVis.js"></script>
+<script src="js/OpeningMovesVis.js"></script>
 
 <!-- Load data, create visualizations -->
 <script src="js/main.js"></script>

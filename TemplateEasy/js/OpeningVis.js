@@ -7,10 +7,11 @@
 
 class OpeningVis {
 
-    constructor(_parentElement, _data) {
+    constructor(_parentElement, _data, _player_color) {
         this.parentElement = _parentElement;
         this.data = _data;
         this.filteredData = this.data;
+        this.player_color = this._player_color
 
         this.initVis();
     }
@@ -82,20 +83,25 @@ class OpeningVis {
         vis.slider
             .min(vis.minRating)
             .max(vis.maxRating)
-            .width(300)
+            .width(200)
             .default([vis.minRating, vis.maxRating])
             .fill('#2196f3')
             .on('onchange', val => {
                 vis.wrangleData();
-            });
+            })
+            .ticks(5);
 
         var sliderArea = d3
             .select('#opening-vis-slider')
             .append('svg')
-            .attr('width', 500)
+            .attr('width', 300)
             .attr('height', 100)
             .append('g')
-            .attr('transform', 'translate(20, 20)');
+            .attr('transform', 'translate(20, 40)');
+
+        sliderArea.append("text")
+            .attr("transform", "translate(-15, -15)")
+            .text("Rating (Elo)")
 
         sliderArea.call(vis.slider);
 
@@ -103,20 +109,26 @@ class OpeningVis {
         vis.timeSlider
             .min(vis.minDate)
             .max(vis.maxDate)
-            .width(300)
+            .width(200)
             .default([vis.minDate, vis.maxDate])
             .fill('#2196f3')
             .on('onchange', val => {
                 vis.wrangleData();
-            });
+            })
+            .ticks(5)
+            .tickFormat(formatDate);
 
         var timeSliderArea = d3
             .select('#opening-vis-slider')
             .append('svg')
-            .attr('width', 500)
+            .attr('width', 300)
             .attr('height', 100)
             .append('g')
-            .attr('transform', 'translate(20, 20)');
+            .attr('transform', 'translate(20, 40)');
+
+        timeSliderArea.append("text")
+            .attr("transform", "translate(-15, -15)")
+            .text("Years")
 
         timeSliderArea.call(vis.timeSlider);
         // (Filter, aggregate, modify data)
@@ -145,14 +157,21 @@ class OpeningVis {
 
         vis.displayData = vis.data.filter(d => d.white_elo >= vis.minRating && d.white_elo <= vis.maxRating);
         vis.displayData = vis.displayData.filter(d => d.date >= vis.minDate && d.date <= vis.maxDate);
-        vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.name)
+        // vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.name)
+        if (this.palyer_color == "white") {
+            vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.moves.slice(0, 6));
+        }
+        else {
+            vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.moves.slice(0, 9));
+        }
+        
 
         vis.displayData = Array.from(vis.displayData, ([name, value]) => ({ name, value }));
         vis.displayData.sort((a, b) => b.value - a.value);
         vis.sum = 0
         vis.displayData.forEach(d => vis.sum += d.value);
 
-        vis.displayData = vis.displayData.slice(0, 15)
+        vis.displayData = vis.displayData.slice(0, 5)
         // Update the visualization
         vis.updateVis();
     }
