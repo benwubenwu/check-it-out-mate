@@ -247,7 +247,7 @@ class CountryVis {
 
     showEdition(d) {
         document.getElementById("title").innerHTML = "Country: " + d.country;
-        document.getElementById('winner').innerText = "Rating: " + d.rating_standard;
+        document.getElementById('winner').innerText = "Rating: " + d.rating_standard.toFixed(2);
         document.getElementById('year').innerText = "Year: " + d.year.getFullYear();
     }
 
@@ -339,7 +339,7 @@ class CountryVis {
             .duration(800)
             .attr("cx", d => vis.x(d.year))
             .attr("cy", d => vis.y(d[prop]))
-            .attr("r", 3)
+            .attr("r", 7)
 
         circles.on("mouseover", function (d) {
             div.style("opacity", 1)
