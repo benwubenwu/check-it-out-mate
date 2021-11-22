@@ -149,8 +149,6 @@ function createVis(data) {
 
     /// Initializing the Chess Board to visualize the different pieces
     let chessboard_pieces = new Chessboard('chessboard_pieces', chessBoard, pieceDisplayData, []);
-    let openingMovesVisWhite = new OpeningMovesVis('opening-moves-vis-white', chessBoard, pieceDisplayData, []);
-    let openingMovesVisBlack = new OpeningMovesVis('opening-moves-vis-black', chessBoard, pieceDisplayData, []);
 
 }
 

@@ -24,7 +24,7 @@ class OpeningVis {
     initVis() {
         let vis = this;
 
-        vis.margin = { top: 20, right: 0, bottom: 200, left: 140 };
+        vis.margin = { top: 20, right: 0, bottom: 120, left: 140 };
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right,
             vis.height = 500 - vis.margin.top - vis.margin.bottom;
@@ -227,6 +227,8 @@ class OpeningVis {
             .attr("fill", "#FFFCED")
             .attr("stroke", "#424b35")
             .attr("stroke-width", 1.5)
+            .on("mouseover", vis.showBoard)
+            .on("mouseout", vis.hideBoard)
             .merge(bars)
             .transition()
             .attr("width", vis.x.bandwidth())
@@ -238,7 +240,7 @@ class OpeningVis {
             })
             .attr("y", function (d) {
                 return vis.y(d.value / vis.sum);
-            })
+            });
 
         bars.exit().remove();
 
@@ -272,5 +274,56 @@ class OpeningVis {
 
 
         vis.wrangleData();
+    }
+
+    showBoard(event, d) {
+        this.openingMoveToFenString = {
+            "1. e4 ": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+            "1. d4 ": "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1",
+            "1. Nf3": "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 1",
+            "1. c4 ": "rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 1",
+            "1. e3 ": "rnbqkbnr/pppppppp/8/8/8/4P3/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+            "1. d3 ": "rnbqkbnr/pppppppp/8/8/8/3P4/PPP1PPPP/RNBQKBNR w KQkq - 0 1",
+            "1. f4 ": "rnbqkbnr/pppppppp/8/8/5P2/8/PPPPP1PP/RNBQKBNR w KQkq - 0 1",
+            "1. g3 ": "rnbqkbnr/pppppppp/8/8/8/6P1/PPPPPP1P/RNBQKBNR w KQkq - 0 1",
+            "1. c3 ": "rnbqkbnr/pppppppp/8/8/8/2P5/PP1PPPPP/RNBQKBNR w KQkq - 0 1",
+
+            "1. e4 e5 ": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+            "1. e4 c5 ": "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+            "1. d4 d5 ": "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1",
+            "1. e4 e6 ": "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+            "1. d4 Nf6": "rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1",
+            "1. e4 d5 ": "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+            "1. Nf3 d5": "rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 1",
+            "1. c3 b6 ": "rnbqkbnr/p1pppppp/1p6/8/8/2P5/PP1PPPPP/RNBQKBNR w KQkq - 0 1",
+            "1. g3 d5 ": "rnbqkbnr/ppp1pppp/8/3p4/8/6P1/PPPPPP1P/RNBQKBNR w KQkq - 0 1",
+            "1. g3 c5 ": "rnbqkbnr/pp1ppppp/8/2p5/8/6P1/PPPPPP1P/RNBQKBNR w KQkq - 0 1",
+            "1. e3 d5 ": "rnbqkbnr/ppp1pppp/8/3p4/8/4P3/PPPP1PPP/RNBQKBNR w KQkq - 0 1"
+        };
+
+        var fenstring = this.openingMoveToFenString[d.name]
+        var board2 = d3chessboard()
+            .fen(fenstring)
+            .size(400)
+            .textopacity(0.5)
+            .whitecellcolor("#FFFCED")
+            .blackcellcolor("#424b35");
+        d3.select("#opening-moves-tooltip")
+            .attr("style", "display: block");
+        d3.select("#opening-moves-tooltip").call(board2);
+
+        d3.select(this)
+            .attr('stroke-width', '2px')
+            .attr('stroke', 'black')
+            .attr('fill', '#424b35')
+    }
+
+    hideBoard(event, d) {
+        d3.select("#opening-moves-tooltip")
+            .attr("style", "display: none");
+        
+        d3.select(this)
+            .attr('stroke-width', '1.5')
+            .attr('fill', '#FFFCED')
     }
 }
