@@ -145,8 +145,8 @@ class Chessboard {
                 }
                 return vis.Xlabels[i].toLowerCase() +"" + vis.Ylabels[current_row]
             })
-            .attr('fill', (d)=> d==0?'white': '#800000')
-            .attr('stroke', 'white')
+            .attr('fill', (d)=> d==0?'#FFFCED ': '#424b35')
+            .attr('stroke', '#5a381b')
             .attr('x', function(d,i){
                  return i*vis.width/8
             })
@@ -183,16 +183,21 @@ class Chessboard {
                         .attr("width", vis.width / 8)
                         .attr("height", vis.height / 8)
                         .attr('id', piece.Name + i)
+                        .attr('class', 'chessPiece '+ piece.Name)
                 }
             )
 
         })
 
+        // Append tooltip
+        vis.tooltip = d3.select("body").append('div')
+            .attr('class', "tooltip")
+            .attr('id', 'pieceTooltip')
 
 
 
         // (Filter, aggregate, modify data)
-        //vis.wrangleData();
+        vis.wrangleData();
     }
 
 
@@ -203,11 +208,21 @@ class Chessboard {
 
     wrangleData() {
         let vis = this;
+        vis.displayData = {}
+        console.log(vis.pieceInfo)
+        vis.pieceInfo.forEach(piece =>{
+            let pieceInfo = {
+                'Movement': piece.Movement,
+                'Capture': piece.Capture
+            }
+            vis.displayData[piece.Name] = pieceInfo
 
-        this.displayData = this.data;
-
+        })
+        console.log(vis.displayData)
+        //this.displayData = this.data;
+        //console.log("here in wrangle data")
         // Update the visualization
-        //vis.updateVis();
+        vis.updateVis();
     }
 
 
@@ -219,6 +234,43 @@ class Chessboard {
 
     updateVis() {
         let vis = this;
+        //console.log("here in update data")
+
+        // Activate hover tooltip on mouse over and deactivate on mouse out
+        vis.imageGroup.selectAll('.chessPiece')
+            .on('mouseover', function(event, d){
+                // Get the pieces name which is stored as one of its classes
+                let pieceName = event.target.classList[1];
+
+                // Create the tooltip
+                d3.select(this)
+                    .attr('stroke-width', '2px')
+                    .attr('stroke', 'black')
+                    .attr('fill', 'rgba(173,222,255,0.62)')
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + 20 + "px")
+                    .style("top", event.pageY + "px")
+                    .html(`
+                     <div style="border: thin solid grey; width: 400px; border-radius: 5px; background: lightgrey; padding: 20px">
+                         <h3>${pieceName}<h3>
+                         <h5>Movement: ${vis.displayData[pieceName].Movement} <h5>
+                         <h5>Capture: ${vis.displayData[pieceName].Capture} <h5>
+                     </div>`
+                    );
+            })
+            .on('mouseout', function (event, d) {
+                d3.select(this)
+                    .attr('stroke-width', '0px')
+                    .attr("fill", 'white')
+                vis.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            });
+
+
 
         // Call brush component here
         // *** TO-DO ***
@@ -252,13 +304,7 @@ class Chessboard {
     // }
 }
 
-function startingPositions (piece) {
-    let x_pos,y_pos;
-    let cells = document.getElementsByClassName("cell");
-    piece.StartingPositions.forEach(pos => {
-        let cell = document.getElementById(pos);
 
-    })
     // loop through the chessboard
 
     //console.log(cells)
@@ -268,4 +314,4 @@ function startingPositions (piece) {
     //     console.log(cells[i])
     // }
 
-}
+

@@ -22,10 +22,10 @@ class PlayerVis {
     initVis() {
         let vis = this;
         // SVG drawing area
-        let margin = {top: 40, right: 150, bottom: 60, left: 60};
+        let margin = {top: 40, right: 250, bottom: 60, left: 60};
 
-        vis.width = 600 - margin.left - margin.right,
-            vis.height = 500 - margin.top - margin.bottom;
+        vis.width = 700 - margin.left - margin.right,
+                vis.height = 500 - margin.top - margin.bottom;
 
         vis.svg = d3.select("#chart-area").append("svg")
             .attr("width", vis.width + margin.left + margin.right)
@@ -113,7 +113,19 @@ class PlayerVis {
         vis.maxYear = arr[1]
         let dates = vis.data.map(d => d.string_date);
         vis.filteredData = vis.data.filter(d => d.ranking_date >= vis.minYear && d.ranking_date <= vis.maxYear);
-        vis.filteredData = vis.filteredData.filter(d => d.rank <= 3);
+        console.log("player data", vis.filteredData)
+        vis.displayData = d3.rollup(vis.filteredData, v => d3.mean(v, i => i.rating), d => d.name);
+
+        vis.displayData = Array.from(vis.displayData, ([name, value]) => ({ name, value }));
+        vis.displayData.sort((a, b) => b.value - a.value);
+        vis.sum = 0
+        vis.displayData.forEach(d => vis.sum += d.value);
+
+        vis.displayData = vis.displayData.slice(0, 10).map(d => d.name)
+
+        vis.filteredData = vis.filteredData.filter(d => vis.displayData.includes(d.name));
+
+        // vis.filteredData = vis.filteredData.filter(d => d.rank <= 3);
 
 
         // Update the visualization
