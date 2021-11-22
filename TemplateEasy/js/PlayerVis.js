@@ -23,9 +23,9 @@ class PlayerVis {
     initVis() {
         let vis = this;
         // SVG drawing area
-        let margin = {top: 40, right: 200, bottom: 60, left: 60};
+        let margin = {top: 40, right: 250, bottom: 60, left: 60};
 
-        vis.width = 600 - margin.left - margin.right,
+        vis.width = 700 - margin.left - margin.right,
                 vis.height = 500 - margin.top - margin.bottom;
 
         vis.svg = d3.select("#chart-area").append("svg")
