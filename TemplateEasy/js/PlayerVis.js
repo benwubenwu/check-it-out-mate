@@ -115,7 +115,18 @@ class PlayerVis {
         let dates = vis.data.map(d => d.string_date);
         vis.filteredData = vis.data.filter(d => d.ranking_date >= vis.minYear && d.ranking_date <= vis.maxYear);
         console.log("player data", vis.filteredData)
-        vis.filteredData = vis.filteredData.filter(d => d.rank <= 3);
+        vis.displayData = d3.rollup(vis.filteredData, v => d3.mean(v, i => i.rating), d => d.name);
+
+        vis.displayData = Array.from(vis.displayData, ([name, value]) => ({ name, value }));
+        vis.displayData.sort((a, b) => b.value - a.value);
+        vis.sum = 0
+        vis.displayData.forEach(d => vis.sum += d.value);
+
+        vis.displayData = vis.displayData.slice(0, 10).map(d => d.name)
+
+        vis.filteredData = vis.filteredData.filter(d => vis.displayData.includes(d.name));
+
+        // vis.filteredData = vis.filteredData.filter(d => d.rank <= 3);
 
 
         // Update the visualization
