@@ -11,7 +11,7 @@ class OpeningVis {
         this.parentElement = _parentElement;
         this.data = _data;
         this.filteredData = this.data;
-        this.player_color = this._player_color
+        this.player_color = _player_color;
 
         this.initVis();
     }
@@ -63,7 +63,14 @@ class OpeningVis {
         vis.svg.append("text")
             .attr("x", -50)
             .attr("y", -8)
-            .text("Most Popular Openings from Free Internet Chess Server (FICS) Games Database");
+            .text(d => {
+                if (vis.player_color == "white") {
+                    return "Most Popular First Moves for White"
+                } else {
+                    return "Most Popular First Moves for Black"
+                }
+            }
+            );
 
         vis.svg.append("text")
             .attr("class", "y-label")
@@ -147,6 +154,30 @@ class OpeningVis {
             vis.openingEcoToOpeningName[d.eco] = d.name;
         })
 
+        vis.openingMoveToName = {
+            "1. e4 ": "King's Pawn Game",
+            "1. d4 ": "Queen's Pawn Game",
+            "1. Nf3": "Zukertort Opening",
+            "1. c4 ": "English Opening",
+            "1. e3 ": "Van't Kruijs Opening",
+            "1. d3 ": "Mieses Opening",
+            "1. f4 ": "Bird's Opening",
+            "1. g3 ": "King's Fianchetto Opening",
+            "1. c3 ": "Saragossa Opening",
+
+            "1. e4 e5 ": "Open Game",
+            "1. e4 c5 ": "Sicilian Defence",
+            "1. d4 d5 ": "Queen's Pawn Game",
+            "1. e4 e6 ": "French Defence",
+            "1. d4 Nf6": "Indian Defence",
+            "1. e4 d5 ": "Scandinavian Defense",
+            "1. Nf3 d5": "Réti Opening",
+            "1. c3 b6 ": "Saragossa Opening",
+            "1. g3 d5 ": "King's Fianchetto Opening",
+            "1. g3 c5 ": "King's Fianchetto Opening",
+            "1. e3 d5 ": "Van't Kruijs Opening"
+        };
+
         let arr = vis.slider.value();
         vis.minRating = arr[0]
         vis.maxRating = arr[1]
@@ -158,7 +189,7 @@ class OpeningVis {
         vis.displayData = vis.data.filter(d => d.white_elo >= vis.minRating && d.white_elo <= vis.maxRating);
         vis.displayData = vis.displayData.filter(d => d.date >= vis.minDate && d.date <= vis.maxDate);
         // vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.name)
-        if (this.palyer_color == "white") {
+        if (vis.player_color == "white") {
             vis.displayData = d3.rollup(vis.displayData, v => v.length, d => d.moves.slice(0, 6));
         }
         else {
@@ -193,7 +224,9 @@ class OpeningVis {
 
         bars.enter().append("rect")
             .attr("class", "bar")
-            .attr("fill", "#93bebf")
+            .attr("fill", "#FFFCED")
+            .attr("stroke", "#424b35")
+            .attr("stroke-width", 1.5)
             .merge(bars)
             .transition()
             .attr("width", vis.x.bandwidth())
@@ -214,7 +247,7 @@ class OpeningVis {
         // TODO: adjust axis labels
         vis.svg.select(".opening-x-axis").call(vis.xAxis)
             .selectAll("text")
-            .text(d => d)
+            .text(d => vis.openingMoveToName[d])
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
