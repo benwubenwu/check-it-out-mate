@@ -20,7 +20,8 @@ let chessBoard = [
     [1,0,1,0,1,0,1,0],
 ];
 
-let openingVis;
+let openingVisWhite;
+let openingVisBlack;
 let openingData;
 
 let playerVis;
@@ -100,7 +101,8 @@ function loadOpeningData() {
 		console.log("opening data:", csv)
 		// Store csv in a global variable
 		openingData = csv;
-		openingVis = new OpeningVis('opening-vis', openingData);
+		openingVisWhite = new OpeningVis('opening-vis-white', openingData, "white");
+        openingVisBlack = new OpeningVis('opening-vis-black', openingData, "black");
 	});
 }
 
@@ -146,7 +148,7 @@ function createVis(data) {
 
 
     /// Initializing the Chess Board to visualize the different pieces
-    let chessboard_pieces = new Chessboard('chessboard_pieces', chessBoard, pieceDisplayData, [])
+    let chessboard_pieces = new Chessboard('chessboard_pieces', chessBoard, pieceDisplayData, []);
 
 }
 

@@ -114,6 +114,7 @@ class PlayerVis {
         vis.maxYear = arr[1]
         let dates = vis.data.map(d => d.string_date);
         vis.filteredData = vis.data.filter(d => d.ranking_date >= vis.minYear && d.ranking_date <= vis.maxYear);
+        console.log("player data", vis.filteredData)
         vis.filteredData = vis.filteredData.filter(d => d.rank <= 3);
 
 
