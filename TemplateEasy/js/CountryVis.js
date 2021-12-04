@@ -257,7 +257,7 @@ class CountryVis {
 
     updateVis() {
         let vis = this;
-
+        // console.log(vis.data)
         let new_data = vis.data
         let filtered_data = vis.data
 
@@ -265,20 +265,27 @@ class CountryVis {
 
         if (values != undefined) {
             console.log(values)
-            filtered_data = vis.data.filter(d => d.year >= parseYear(parseInt(values[0])) && d.year <= parseYear(parseInt(values[1])))
+            filtered_data = vis.data.filter(d => d.ranking_date >= parseYear(parseInt(values[0])) && d.ranking_date <= parseYear(parseInt(values[1])))
         }
         if (vis.data == undefined) {
             return null
         }
 
-        filtered_data = filtered_data.sort((a, b) => a.rating_standard > b.rating_standard)
+        // filtered_data = d3.rollup(filtered_data, v => d3.mean(v, i => i.rating), d => d.country);
+        // filtered_data = Array.from(filtered_data, ([country, value]) => ({country, value}));
+
+        console.log(filtered_data)
+
+        filtered_data = filtered_data.sort((a, b) => a.rating > b.rating)
         let country = [...new Set(filtered_data.map(d => d.country))]
         let topten = country.slice(0, 10)
-        filtered_data = filtered_data.filter(d => topten.includes(d.country))
 
-        console.log(topten)
+        filtered_data = filtered_data.filter(d => topten.includes(d.country))
+        console.log(filtered_data)
 
         let grouped_data = d3.group(filtered_data, d => d.country)
+        console.log(grouped_data)
+
         document.getElementById('start').innerText = ("Start: " + formatDate(d3.min(filtered_data, d => {
             return d.year
         })))
@@ -289,12 +296,12 @@ class CountryVis {
 
         vis.masterGroup.selectAll("lines").remove();
 
-        vis.y.domain([d3.min(filtered_data, d => d[prop]), d3.max(filtered_data, d => d[prop])]);
-        vis.x.domain([d3.min(filtered_data, d => d.year), d3.max(filtered_data, d => d.year)]);
+        vis.y.domain([d3.min(filtered_data, d => d.rating), d3.max(filtered_data, d => d.rating)]);
+        vis.x.domain([d3.min(filtered_data, d => d.ranking_date), d3.max(filtered_data, d => d.ranking_date)]);
 
-        const line = d3.line()
-            .x(d => vis.x(d.years))
-            .y(d => vis.y(d[prop]));
+        // const line = d3.line()
+        //     .x(d => vis.x(d.years))
+        //     .y(d => vis.y(d[prop]));
 
         console.log("LENGTH")
 
@@ -309,16 +316,14 @@ class CountryVis {
             .append("path")
             .attr("class", "line")
             .merge(vis.lineGraph)
-            .transition()
-            .duration(400)
             .attr("d", d => {
                 return d3.line()
                     .curve(d3.curveMonotoneX)
-                    .x(d => vis.x(d.year))
-                    .y(d => vis.y(d.rating_standard))
+                    .x(d => vis.x(d.ranking_date))
+                    .y(d => vis.y(d.rating))
                     (d[1])
             })
-            .attr("stroke-width", 1)
+
             .attr("stroke", (d, i) => `#${vis.colors[i]}`)
             .attr('fill', 'none')
 
@@ -328,32 +333,32 @@ class CountryVis {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        const circles = vis.masterGroup.selectAll("circle").data(filtered_data)
-        circles.enter().append('circle')
-            .data(filtered_data)
-            .attr("fill", "grey")
-            .attr('opacity', '0.5')
-            .merge(circles)
-            .on("click", (e, d) => vis.showEdition(d))
-            .transition()
-            .duration(800)
-            .attr("cx", d => vis.x(d.year))
-            .attr("cy", d => vis.y(d[prop]))
-            .attr("r", 7)
-
-        circles.on("mouseover", function (d) {
-            div.style("opacity", 1)
-            div.html(d.country)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 28) + "px");
-        })
-            .on("mouseout", function (d) {
-                div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
-
-        circles.exit().remove()
+        // const circles = vis.masterGroup.selectAll("circle").data(filtered_data)
+        // circles.enter().append('circle')
+        //     .data(filtered_data)
+        //     .attr("fill", "grey")
+        //     .attr('opacity', '0.5')
+        //     .merge(circles)
+        //     .on("click", (e, d) => vis.showEdition(d))
+        //     .transition()
+        //     .duration(800)
+        //     .attr("cx", d => vis.x(d.ranking_date))
+        //     .attr("cy", d => vis.y(d.rating))
+        //     .attr("r", 7)
+        //
+        // circles.on("mouseover", function (d) {
+        //     div.style("opacity", 1)
+        //     div.html(d.country)
+        //         .style("left", (d3.event.pageX) + "px")
+        //         .style("top", (d3.event.pageY - 28) + "px");
+        // })
+        //     .on("mouseout", function (d) {
+        //         div.transition()
+        //             .duration(500)
+        //             .style("opacity", 0);
+        //     });
+        //
+        // circles.exit().remove()
 
         const xAxis = d3.axisBottom()
             .scale(vis.x)

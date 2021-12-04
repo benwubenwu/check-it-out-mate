@@ -10,14 +10,14 @@ let parseYear = d3.timeParse("%Y");
 let FICSparseDate = d3.timeParse("%Y.%m.%d")
 
 let chessBoard = [
-    [0,1,0,1,0,1,0,1],
-    [1,0,1,0,1,0,1,0],
-    [0,1,0,1,0,1,0,1],
-    [1,0,1,0,1,0,1,0],
-    [0,1,0,1,0,1,0,1],
-    [1,0,1,0,1,0,1,0],
-    [0,1,0,1,0,1,0,1],
-    [1,0,1,0,1,0,1,0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
 ];
 
 let openingVisWhite;
@@ -37,16 +37,15 @@ loadOpeningData();
 loadPlayerData();
 
 function loadCountryData() {
-    d3.csv("data/ratings-by-country.csv", row => {
-        row.year = parseYear(parseInt(row.year));
-        // console.log(row.year)
-        row.rating_standard = +row.rating_standard;
+    d3.csv("data/fide_historical.csv", row => {
+        row.ranking_date = parseYear(parseInt(parseDate(row.ranking_date).getFullYear()));
+        row.rating = +row.rating;
         row.country = row.country;
         return row
     }).then(csv => {
-
         // Store csv data in global variable
         countryData = csv;
+        console.log(csv)
         countryVis = new CountryVis('chart-area-2', countryData);
 
         let range = document.getElementById('range');
@@ -55,12 +54,12 @@ function loadCountryData() {
         noUiSlider.create(range, {
             range: {
                 max: 2021,
-                min: 2016
+                min: 2000
             },
 
             step: 1,
 
-            start: [2016, 2021],
+            start: [2000, 2021],
 
             connect: true,
         });
@@ -72,38 +71,38 @@ function loadCountryData() {
 }
 
 function loadPlayerData() {
-	d3.csv("data/fide_historical.csv", row => {
-		row.string_date = row.ranking_date;
-		row.ranking_date = parseDate(row.ranking_date);
-		row.rank = +row.rank;
-		row.rating = +row.rating;
-		row.games = +row.games;
-		row.birth_year = parseYear(row.birth_year);
-		return row
-	}).then(csv => {
-		console.log(csv)
-		// Store csv in a global variable
-		playerData = csv;
-		playerVis = new PlayerVis('chart-area', playerData);
-	});
+    d3.csv("data/fide_historical.csv", row => {
+        row.string_date = row.ranking_date;
+        row.ranking_date = parseDate(row.ranking_date);
+        row.rank = +row.rank;
+        row.rating = +row.rating;
+        row.games = +row.games;
+        row.birth_year = parseYear(row.birth_year);
+        return row
+    }).then(csv => {
+        console.log(csv)
+        // Store csv in a global variable
+        playerData = csv;
+        playerVis = new PlayerVis('chart-area', playerData);
+    });
 }
 
 function loadOpeningData() {
-	d3.csv("data/fics_1999_2020.csv", row => {
+    d3.csv("data/fics_1999_2020.csv", row => {
         row.date = FICSparseDate(row.date);
         row.last_move_at = +row.last_move_at;
         row.turns = +row.turns;
         row.white_elo = +row.white_elo;
         row.black_elo = +row.black_elo;
         row.opening_ply = +row.opening_ply;
-		return row
-	}).then(csv => {
-		console.log("opening data:", csv)
-		// Store csv in a global variable
-		openingData = csv;
-		openingVisWhite = new OpeningVis('opening-vis-white', openingData, "white");
+        return row
+    }).then(csv => {
+        console.log("opening data:", csv)
+        // Store csv in a global variable
+        openingData = csv;
+        openingVisWhite = new OpeningVis('opening-vis-white', openingData, "white");
         openingVisBlack = new OpeningVis('opening-vis-black', openingData, "black");
-	});
+    });
 }
 
 // (1) Load data with promises
@@ -145,14 +144,12 @@ function createVis(data) {
     console.log(pieceDisplayData)
 
 
-
-
     /// Initializing the Chess Board to visualize the different pieces
     let chessboard_pieces = new Chessboard('chessboard_pieces', chessBoard, pieceDisplayData, []);
 
 }
 
 function updateVisualization() {
-	// let selectValue = d3.select("#data-type").property("value");
-	playerVis.wrangleData();
+    // let selectValue = d3.select("#data-type").property("value");
+    playerVis.wrangleData();
 }
