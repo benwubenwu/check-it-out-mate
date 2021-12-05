@@ -37,14 +37,17 @@ loadOpeningData();
 loadPlayerData();
 
 function loadCountryData() {
-    d3.csv("data/fide_historical.csv", row => {
-        row.ranking_date = parseYear(parseInt(parseDate(row.ranking_date).getFullYear()));
+    d3.csv("data/ranking_by_country.csv", row => {
+        row.year = parseYear(parseInt(row.ranking_year));
+        row.dates = (row.ranking_year)
+        // console.log(row.dates)
         row.rating = +row.rating;
         row.country = row.country;
         return row
     }).then(csv => {
         // Store csv data in global variable
         countryData = csv;
+        console.log('CSVCSV')
         console.log(csv)
         countryVis = new CountryVis('chart-area-2', countryData);
 
@@ -53,13 +56,13 @@ function loadCountryData() {
         // created with assistance from noUISlider documentation
         noUiSlider.create(range, {
             range: {
-                max: 2021,
+                max: 2017,
                 min: 2000
             },
 
             step: 1,
 
-            start: [2000, 2021],
+            start: [2000, 2017],
 
             connect: true,
         });
