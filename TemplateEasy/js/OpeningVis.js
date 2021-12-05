@@ -149,9 +149,10 @@ class OpeningVis {
             // .blackcellcolor("#424b35")
             .whitecellcolor("#FAFAFA")
             .blackcellcolor("#CCC");
-        // d3.select("#opening-moves-tooltip")
-        //     .attr("style", "display: block");
-        d3.select("#opening-moves-tooltip").call(board2);
+
+        // d3.select("#opening-moves-tooltip").call(board2);
+
+        var board2 = Chessboard('opening-moves-tooltip', 'start');
 
         // (Filter, aggregate, modify data)
         vis.wrangleData();
@@ -317,17 +318,96 @@ class OpeningVis {
         };
 
         var fenstring = this.openingMoveToFenString[d.name]
-        var board2 = d3chessboard()
-            .fen(fenstring)
-            .size(600)
-            .textopacity(0.5)
-            // .whitecellcolor("#FFFCED")
-            // .blackcellcolor("#424b35");
-            .whitecellcolor("#FAFAFA")
-            .blackcellcolor("#CCC");
-        // d3.select("#opening-moves-tooltip")
-        //     .attr("style", "display: block");
-        d3.select("#opening-moves-tooltip").call(board2);
+        // var board2 = d3chessboard()
+        //     .fen(fenstring)
+        //     .size(600)
+        //     .textopacity(0.5)
+        //     // .whitecellcolor("#FFFCED")
+        //     // .blackcellcolor("#424b35");
+        //     .whitecellcolor("#FAFAFA")
+        //     .blackcellcolor("#CCC");
+
+        // d3.select("#opening-moves-tooltip").call(board2);
+        var config = {
+            position: fenstring
+        }
+        var board2 = Chessboard('opening-moves-tooltip', 'start');
+        // White's first moves
+        if (d.name == "1. e4 ") {
+            board2.move('e2-e4')
+        }
+        else if (d.name == "1. d4 ") {
+            board2.move('d2-d4')
+        }
+        else if (d.name == "1. Nf3") {
+            board2.move('g1-f3')
+        }
+        else if (d.name == "1. c4 ") {
+            board2.move('c2-c4')
+        }
+        else if (d.name == "1. e3 ") {
+            board2.move('e2-e3')
+        }
+        else if (d.name == "1. d3 ") {
+            board2.move('d2-d3')
+        }
+        else if (d.name == "1. f4 ") {
+            board2.move('f2-f4')
+        }
+        else if (d.name == "1. g3 ") {
+            board2.move('g2-g3')
+        }
+        else if (d.name == "1. c3 ") {
+            board2.move('c2-d3')
+        }
+        // Black's first moves
+        if (d.name == "1. e4 e5 ") {
+            board2.move('e2-e4')
+            board2.move('e7-e5')
+        }
+        else if (d.name == "1. e4 c5 ") {
+            board2.move('e2-e4')
+            board2.move('c7-c5')
+        }
+        else if (d.name == "1. d4 d5 ") {
+            board2.move('d2-d4')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. e4 e6 ") {
+            board2.move('e2-e4')
+            board2.move('e7-e6')
+        }
+        else if (d.name == "1. d4 Nf6") {
+            board2.move('d2-d4')
+            board2.move('g8-f6')
+        }
+        else if (d.name == "1. e4 d5 ") {
+            board2.move('e2-e4')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. Nf3 d5") {
+            board2.move('g1-f3')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. c3 b6 ") {
+            board2.move('c2-c3')
+            board2.move('b7-b6')
+        }
+        else if (d.name == "1. g3 d5 ") {
+            board2.move('g2-g3')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. g3 c5 ") {
+            board2.move('g2-g3')
+            board2.move('c7-c5')
+        }
+        else if (d.name == "1. e3 d5 ") {
+            board2.move('e2-e3')
+            board2.move('d7-d5')
+        }
+
+
+        
 
         d3.select(this)
             .attr('stroke-width', '2px')

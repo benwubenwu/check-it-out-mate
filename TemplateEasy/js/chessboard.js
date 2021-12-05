@@ -20,7 +20,7 @@ let pieceSources = {
 };
 
 
-class Chessboard {
+class CustomChessboard {
 
     constructor(_parentElement,_boardLayout, _pieceInfo, _opening) {
         this.parentElement = _parentElement;
