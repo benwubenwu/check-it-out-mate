@@ -27,7 +27,7 @@ class OpeningVis {
         vis.margin = { top: 20, right: 0, bottom: 120, left: 140 };
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right,
-            vis.height = 500 - vis.margin.top - vis.margin.bottom;
+            vis.height = 325 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -40,7 +40,7 @@ class OpeningVis {
         // Scales and axes
         vis.x = d3.scaleBand()
             .rangeRound([0, vis.width])
-            .paddingInner(0.2)
+            .paddingInner(0.4)
 
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
@@ -70,7 +70,8 @@ class OpeningVis {
                     return "Most Popular First Moves for Black"
                 }
             }
-            );
+            )
+            .attr("style", "font-size: 10px");
 
         vis.svg.append("text")
             .attr("class", "y-label")
@@ -78,7 +79,8 @@ class OpeningVis {
 			.attr("x", -vis.height / 2)
 			.attr("y", -50)
 			.attr("text-anchor", "middle")
-            .text("Percentage of Games Played");
+            .text("Percentage of Games Played")
+            .attr("style", "font-size: 10px");
         
         vis.minRating = d3.min(vis.data, d=>d.white_elo);
         vis.maxRating = d3.max(vis.data, d=>d.white_elo);
@@ -138,6 +140,19 @@ class OpeningVis {
             .text("Years")
 
         timeSliderArea.call(vis.timeSlider);
+
+        var board2 = d3chessboard()
+            // .fen(fenstring)
+            .size(600)
+            .textopacity(0.5)
+            // .whitecellcolor("#FFFCED")
+            // .blackcellcolor("#424b35")
+            .whitecellcolor("#FAFAFA")
+            .blackcellcolor("#CCC");
+        // d3.select("#opening-moves-tooltip")
+        //     .attr("style", "display: block");
+        d3.select("#opening-moves-tooltip").call(board2);
+
         // (Filter, aggregate, modify data)
         vis.wrangleData();
     }
@@ -304,12 +319,14 @@ class OpeningVis {
         var fenstring = this.openingMoveToFenString[d.name]
         var board2 = d3chessboard()
             .fen(fenstring)
-            .size(400)
+            .size(600)
             .textopacity(0.5)
-            .whitecellcolor("#FFFCED")
-            .blackcellcolor("#424b35");
-        d3.select("#opening-moves-tooltip")
-            .attr("style", "display: block");
+            // .whitecellcolor("#FFFCED")
+            // .blackcellcolor("#424b35");
+            .whitecellcolor("#FAFAFA")
+            .blackcellcolor("#CCC");
+        // d3.select("#opening-moves-tooltip")
+        //     .attr("style", "display: block");
         d3.select("#opening-moves-tooltip").call(board2);
 
         d3.select(this)
@@ -319,8 +336,8 @@ class OpeningVis {
     }
 
     hideBoard(event, d) {
-        d3.select("#opening-moves-tooltip")
-            .attr("style", "display: none");
+        // d3.select("#opening-moves-tooltip")
+        //     .attr("style", "display: none");
         
         d3.select(this)
             .attr('stroke-width', '1.5')
