@@ -72,7 +72,7 @@ class OpeningVis {
                 }
             }
             )
-            .attr("style", "font-size: 14px");
+            .attr("style", "font-size: 14px; fill: #b7b7b6"); // EDIT HERE
 
         vis.svg.append("text")
             .attr("class", "y-label")
@@ -81,7 +81,7 @@ class OpeningVis {
 			.attr("y", -50)
 			.attr("text-anchor", "middle")
             .text("Percentage of Games Played")
-            .attr("style", "font-size: 10px");
+            .attr("style", "font-size: 10px; fill: #b7b7b6");
         
         vis.minRating = d3.min(vis.data, d=>d.white_elo);
         vis.maxRating = d3.max(vis.data, d=>d.white_elo);
@@ -241,9 +241,9 @@ class OpeningVis {
 
         bars.enter().append("rect")
             .attr("class", "bar")
-            .attr("fill", "#FFFCED")
-            .attr("stroke", "#424b35")
-            .attr("stroke-width", 1.5)
+            .attr("fill", "#157394")
+            .attr("stroke", "white")
+            .attr("stroke-width", 1)
             .on("mouseover", vis.showBoard)
             .on("mouseout", vis.hideBoard)
             .merge(bars)
@@ -411,17 +411,17 @@ class OpeningVis {
         
 
         d3.select(this)
-            .attr('stroke-width', '2px')
-            .attr('stroke', 'black')
-            .attr('fill', '#424b35')
+            .attr('stroke-width', '1px')
+            .attr('stroke', 'white')
+            .attr('fill', 'rgba(173,222,255,0.62)')
     }
 
     hideBoard(event, d) {
         // d3.select("#opening-moves-tooltip")
         //     .attr("style", "display: none");
-        
+        var board2 = Chessboard('opening-moves-tooltip', {position: 'start', moveSpeed: 'slow', snapbackSpeed: 500});
         d3.select(this)
             .attr('stroke-width', '1.5')
-            .attr('fill', '#FFFCED')
+            .attr('fill', '#157394')
     }
 }
