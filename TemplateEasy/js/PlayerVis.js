@@ -80,6 +80,13 @@ class PlayerVis {
 
         sliderArea.call(vis.slider);
 
+        // Axis title
+        vis.svg.append("text")
+            .attr("x", -38)
+            .attr("y", -12)
+            .text("Top 10 Chess Players")
+            .attr("style", "font-size: 14px; fill: #b7b7b6; font-weight: bold;");
+
         vis.svg.append("g")
             .attr("class", "y-axis")
             .call(d3.axisLeft(vis.y));
@@ -93,13 +100,15 @@ class PlayerVis {
             .attr("transform", "translate(" + vis.width / 2 + ", " + (vis.height + 45) + ")")
             .attr("text-anchor", "middle")
             .text("Year")
+            .attr("style", "font-size: 10px; fill: #b7b7b6");
 
         vis.svg.append("text")
             .attr("class", "y-label")
             .attr("transform", "rotate(-90)")
             .attr("x", -vis.height / 2)
             .attr("y", -45)
-            .attr("text-anchor", "middle");
+            .attr("text-anchor", "middle")
+            .attr("style", "font-size: 10px; fill: #b7b7b6");
 
         // (Filter, aggregate, modify data)
         vis.wrangleData();
@@ -278,8 +287,9 @@ class PlayerVis {
             .merge(vis.legendLabels)
             .attr("class", "legend-label")
             .attr("x", vis.width + 45)
-            .attr("y", (d, i) => i * 20 + 7.5)
+            .attr("y", (d, i) => i * 20 + 11)
             .text(d => d[0])
+            .attr("style", "font-size: 14px; fill: #b7b7b6")
 
         vis.legendLabels.exit().remove();
         // .attr("transform", (d, i) => "translate(" + 0 + "," + i * 20 + ")")
