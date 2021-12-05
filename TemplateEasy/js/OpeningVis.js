@@ -62,7 +62,7 @@ class OpeningVis {
         // Axis title
         vis.svg.append("text")
             .attr("x", -50)
-            .attr("y", -8)
+            .attr("y", -10)
             .text(d => {
                 if (vis.player_color == "white") {
                     return "Most Popular First Moves for White"
@@ -71,7 +71,7 @@ class OpeningVis {
                 }
             }
             )
-            .attr("style", "font-size: 10px");
+            .attr("style", "font-size: 14px");
 
         vis.svg.append("text")
             .attr("class", "y-label")

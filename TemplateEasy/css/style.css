@@ -72,3 +72,8 @@ li {
     stroke: gray;
     opacity: 25%;
   }
+
+#opening-moves-tooltip {
+    margin-left: 4em;
+    margin-top: 1em;
+}
