@@ -285,7 +285,7 @@ class Chessboard {
                         .attr('y2', pieceName=="White-Pawn"? pieceYPos-vis.height/16-10: pieceYPos+vis.height/4-30)
                         .attr("stroke","goldenrod")
                         .attr("stroke-width",10)
-                        .attr("marker-end","url(#arrow)");
+                        .attr("marker-end","url(#arrow)")
                     vis.movementIndicator2 = vis.svg.append('line')
                         .attr('x1', pieceXPos)
                         .attr('x2', pieceXPos)
