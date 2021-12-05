@@ -166,8 +166,31 @@ class PlayerVis {
 
         // https://www.d3-graph-gallery.com/graph/line_several_group.html
         var sumstat = d3.group(vis.filteredData, d => d.name);
-
         const color = d3.scaleOrdinal()
+            .domain([
+                "Kasparov, Garry",
+                "Kramnik, Vladimir",
+                "Anand, Viswanathan",
+                "Topalov, Veselin",
+                "Aronian, Levon",
+                "Nakamura, Hikaru",
+                "Karjakin, Sergey",
+                "Carlsen, Magnus",
+                "Caruana, Fabiano",
+                "Giri, Anish",
+                "Grischuk, Alexander",
+                "Morozevich, Alexander",
+                "Adams, Michael",
+                "Shirov, Alexei",
+                "Leko, Peter",
+                "Ivanchuk, Vassily",
+                "Bareev, Evgeny",
+                "Polgar, Judit",
+                "Svidler, Peter",
+                "Mamedyarov, Shakhriyar",
+                "So, Wesley",
+                "Vachier-Lagrave, Maxime",
+            ])
             .range([
                 '#1f77b4',
                 '#aec7e8',
@@ -195,15 +218,16 @@ class PlayerVis {
                 '#843c39'
             ]);
 
-        console.log(sumstat)
-
         vis.lineGraph = vis.svg.selectAll(".line")
             .data(sumstat);
 
         vis.lineGraph.enter().append("g")
             .append("path")
             .attr("class", "line")
+            .attr("id", (d, i) => "line" + i)
             .merge(vis.lineGraph)
+            .on("mouseover", vis.handleMouseOver)
+            .on("mouseout", vis.handleMouseOut)
             .transition(transition)
             .attr("d", d => {
                 return d3.line()
@@ -213,7 +237,7 @@ class PlayerVis {
                     (d[1])
             })
             .attr("stroke", d => color(d[0]))
-            .attr("stroke-width", 2)
+            .attr("stroke-width", 1.5)
             .attr("fill", "none");
 
         vis.lineGraph.exit().remove();
@@ -273,6 +297,17 @@ class PlayerVis {
         // dots.exit().remove();
     }
 
+    handleMouseOver(event, d) {
+        d3.select(this).attr("stroke-width", "3px");
+
+        d3.selectAll(".line:not(#" + this.id + ")").classed('unselected', true);
+        d3.select(this).classed("unselected", false)
+    }
+
+    handleMouseOut(d, i) {
+        d3.select(this).attr("stroke-width", 1.5);
+        d3.selectAll(".line:not(#" + this.id + ")").classed('unselected', false);
+    }
 
     onSelectionChange(selectionStart, selectionEnd) {
         let vis = this;

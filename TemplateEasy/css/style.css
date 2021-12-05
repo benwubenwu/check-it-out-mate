@@ -61,3 +61,8 @@ li {
 .scrollable-content {
     overflow: scroll;
 }
+
+.line.unselected {
+    stroke: gray;
+    opacity: 25%;
+  }
