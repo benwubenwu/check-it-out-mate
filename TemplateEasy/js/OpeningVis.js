@@ -72,7 +72,7 @@ class OpeningVis {
                 }
             }
             )
-            .attr("style", "font-size: 14px; fill: #b7b7b6"); // EDIT HERE
+            .attr("style", "font-size: 14px; fill: #b7b7b6; font-weight: bold;"); 
 
         vis.svg.append("text")
             .attr("class", "y-label")
