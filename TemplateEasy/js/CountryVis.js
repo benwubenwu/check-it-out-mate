@@ -232,6 +232,7 @@ class CountryVis {
         vis.masterGroup = vis.svg.append('g')
 
         vis.x = d3.scaleTime()
+        vis.x = d3.scaleTime()
             .range([0, vis.width])
 
         vis.y = d3.scaleLinear()
@@ -247,7 +248,7 @@ class CountryVis {
 
     showEdition(d) {
         document.getElementById("title").innerHTML = "Country: " + d.country;
-        document.getElementById('winner').innerText = "Rating: " + d.rating_standard.toFixed(2);
+        document.getElementById('winner').innerText = "Average rating: " + d.rating.toFixed(2);
         document.getElementById('year').innerText = "Year: " + d.year.getFullYear();
     }
 
@@ -257,23 +258,25 @@ class CountryVis {
 
     updateVis() {
         let vis = this;
-        // console.log(vis.data)
         let new_data = vis.data
         let filtered_data = vis.data
+        console.log(vis.data)
 
         const values = range.noUiSlider.get()
 
+        console.log(values[0])
+        console.log(values[1])
+
         if (values != undefined) {
-            console.log(values)
-            filtered_data = vis.data.filter(d => d.ranking_date >= parseYear(parseInt(values[0])) && d.ranking_date <= parseYear(parseInt(values[1])))
+            filtered_data = vis.data.filter(d => d.year >= parseYear(parseInt(values[0])) && d.year <= parseYear(parseInt(values[1])))
+            console.log(filtered_data)
+            console.log('filtered data')
         }
         if (vis.data == undefined) {
             return null
         }
 
-        // filtered_data = d3.rollup(filtered_data, v => d3.mean(v, i => i.rating), d => d.country);
-        // filtered_data = Array.from(filtered_data, ([country, value]) => ({country, value}));
-
+        console.log('done')
         console.log(filtered_data)
 
         filtered_data = filtered_data.sort((a, b) => a.rating > b.rating)
@@ -281,33 +284,23 @@ class CountryVis {
         let topten = country.slice(0, 10)
 
         filtered_data = filtered_data.filter(d => topten.includes(d.country))
-        console.log(filtered_data)
-
         let grouped_data = d3.group(filtered_data, d => d.country)
-        console.log(grouped_data)
 
-        document.getElementById('start').innerText = ("Start: " + formatDate(d3.min(filtered_data, d => {
-            return d.year
-        })))
-        document.getElementById('end').innerText = ("End: " + formatDate(d3.max(filtered_data, d => d.year)))
+        const color_dict = {}
+        for (let i = 0; i < 10; i++) {
+            console.log(topten[i])
+            color_dict[topten[i]] = i;
+        }
 
-        // let prop = d3.select("#ranking-type").property("value");
-        const prop = "rating_standard"
+        console.log(color_dict)
 
+        document.getElementById('start').innerText = parseInt(values[0])
+
+        document.getElementById('end').innerText = parseInt(values[1])
         vis.masterGroup.selectAll("lines").remove();
 
         vis.y.domain([d3.min(filtered_data, d => d.rating), d3.max(filtered_data, d => d.rating)]);
-        vis.x.domain([d3.min(filtered_data, d => d.ranking_date), d3.max(filtered_data, d => d.ranking_date)]);
-
-        // const line = d3.line()
-        //     .x(d => vis.x(d.years))
-        //     .y(d => vis.y(d[prop]));
-
-        console.log("LENGTH")
-
-        // let random_color = () => {
-        //     return Math.floor(Math.random() * 16777215).toString(16);
-        // }
+        vis.x.domain([d3.min(filtered_data, d => d.year), d3.max(filtered_data, d => d.year)]);
 
         vis.lineGraph = vis.masterGroup.selectAll(".line")
             .data(grouped_data);
@@ -316,15 +309,20 @@ class CountryVis {
             .append("path")
             .attr("class", "line")
             .merge(vis.lineGraph)
+            .transition()
+            .duration(800)
             .attr("d", d => {
                 return d3.line()
                     .curve(d3.curveMonotoneX)
-                    .x(d => vis.x(d.ranking_date))
+                    .x(d => vis.x(d.year))
                     .y(d => vis.y(d.rating))
                     (d[1])
             })
-
-            .attr("stroke", (d, i) => `#${vis.colors[i]}`)
+            .attr("stroke", (d) => {
+                console.log(d[0])
+                console.log(color_dict[d[0]]);
+                return `#${vis.colors[color_dict[d[0]]]}`
+            })
             .attr('fill', 'none')
 
         vis.lineGraph.exit().remove();
@@ -333,34 +331,34 @@ class CountryVis {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        // const circles = vis.masterGroup.selectAll("circle").data(filtered_data)
-        // circles.enter().append('circle')
-        //     .data(filtered_data)
-        //     .attr("fill", "grey")
-        //     .attr('opacity', '0.5')
-        //     .merge(circles)
-        //     .on("click", (e, d) => vis.showEdition(d))
-        //     .transition()
-        //     .duration(800)
-        //     .attr("cx", d => vis.x(d.ranking_date))
-        //     .attr("cy", d => vis.y(d.rating))
-        //     .attr("r", 7)
-        //
-        // circles.on("mouseover", function (d) {
-        //     div.style("opacity", 1)
-        //     div.html(d.country)
-        //         .style("left", (d3.event.pageX) + "px")
-        //         .style("top", (d3.event.pageY - 28) + "px");
-        // })
-        //     .on("mouseout", function (d) {
-        //         div.transition()
-        //             .duration(500)
-        //             .style("opacity", 0);
-        //     });
-        //
-        // circles.exit().remove()
+        const circles = vis.masterGroup.selectAll("circle").data(filtered_data)
+        circles.enter().append('circle')
+            .data(filtered_data)
+            .attr("fill", "grey")
+            .attr('opacity', '0.5')
+            .merge(circles)
+            .on("click", (e, d) => vis.showEdition(d))
+            .transition()
+            .duration(800)
+            .attr("cx", d => vis.x(d.year))
+            .attr("cy", d => vis.y(d.rating))
+            .attr("r", 7)
 
-        const xAxis = d3.axisBottom()
+        circles.on("mouseover", function (d) {
+            div.style("opacity", 1)
+            div.html(d.country)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+            .on("mouseout", function (d) {
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+        circles.exit().remove()
+
+        const xAxis = d3.axisBottom().tickFormat(d3.timeFormat("%Y"))
             .scale(vis.x)
         const yAxis = d3.axisLeft()
             .scale(vis.y)

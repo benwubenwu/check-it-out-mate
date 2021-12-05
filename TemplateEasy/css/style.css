@@ -61,3 +61,8 @@ li {
 .scrollable-content {
     overflow: scroll;
 }
+
+.nouilabel {
+
+    text-align: center;
+}
