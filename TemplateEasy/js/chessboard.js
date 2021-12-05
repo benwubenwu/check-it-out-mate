@@ -20,7 +20,7 @@ let pieceSources = {
 };
 
 
-class Chessboard {
+class CustomChessboard {
 
     constructor(_parentElement,_boardLayout, _pieceInfo, _opening) {
         this.parentElement = _parentElement;
@@ -145,8 +145,8 @@ class Chessboard {
                 }
                 return vis.Xlabels[i].toLowerCase() +"" + vis.Ylabels[current_row]
             })
-            .attr('fill', (d)=> d==0?'#FFFCED ': '#424b35')
-            .attr('stroke', '#5a381b')
+            .attr('fill', (d)=> d==0?'#f5f5f5': '#157394')
+            .attr('stroke', 'black')
             .attr('x', function(d,i){
                  return i*vis.width/8
             })
@@ -161,11 +161,6 @@ class Chessboard {
             .attr('width', vis.width/8)
             .attr('height',vis.height/8)
 
-        // Translating the height of each row
-        // d3.selectAll('.cell-row')
-        //     .attr('transform', (d,i) => {
-        //         return 'translate(0,'+ i*vis.height/8+")"
-        //     })
 
         // Appending chess piece images
         vis.imageGroup = vis.svg.append('g').attr('class', 'pieces-group')
@@ -195,6 +190,20 @@ class Chessboard {
             .attr('id', 'pieceTooltip')
 
 
+        // Appending for future use to depict piece movement
+        vis.svg.append("svg:defs").append("svg:marker")
+            .attr("id", "arrow")
+            .attr("refX", 6)
+            .attr("refY", 6)
+            .attr('markerUnits','strokeWidth')
+            .attr("markerWidth", 7)
+            .attr("markerHeight", 7)
+            .attr("viewBox" , "0 0 12 12")
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
+            .style("fill", "goldenrod");
+
 
         // (Filter, aggregate, modify data)
         vis.wrangleData();
@@ -209,7 +218,6 @@ class Chessboard {
     wrangleData() {
         let vis = this;
         vis.displayData = {}
-        console.log(vis.pieceInfo)
         vis.pieceInfo.forEach(piece =>{
             let pieceInfo = {
                 'Movement': piece.Movement,
@@ -218,9 +226,7 @@ class Chessboard {
             vis.displayData[piece.Name] = pieceInfo
 
         })
-        console.log(vis.displayData)
-        //this.displayData = this.data;
-        //console.log("here in wrangle data")
+
         // Update the visualization
         vis.updateVis();
     }
@@ -241,6 +247,13 @@ class Chessboard {
             .on('mouseover', function(event, d){
                 // Get the pieces name which is stored as one of its classes
                 let pieceName = event.target.classList[1];
+                //event.fromElement.attributes.x.nodeValue
+                let pieceId = event.toElement.attributes.id.value
+                // Using this to get the chess piece's X and Y positions
+                let pieceInfo = document.getElementById(pieceId);
+                // Getting x and y positions
+                let pieceXPos = parseFloat(pieceInfo.getAttribute('x')) + vis.width/16
+                let pieceYPos = parseFloat(pieceInfo.getAttribute('y'))
 
                 // Create the tooltip
                 d3.select(this)
@@ -249,15 +262,263 @@ class Chessboard {
                     .attr('fill', 'rgba(173,222,255,0.62)')
                 vis.tooltip
                     .style("opacity", 1)
-                    .style("left", event.pageX + 20 + "px")
-                    .style("top", event.pageY + "px")
+                    .style("left", 1200 + "px")
+                    .style("top", vis.height-75+ "px")
                     .html(`
                      <div style="border: thin solid grey; width: 400px; border-radius: 5px; background: lightgrey; padding: 20px">
                          <h3>${pieceName}<h3>
                          <h5>Movement: ${vis.displayData[pieceName].Movement} <h5>
                          <h5>Capture: ${vis.displayData[pieceName].Capture} <h5>
                      </div>`
-                    );
+                    )
+                // Creating svg element to show a pieces movement based on the pieces name
+                // Pawns
+                if (pieceName == "White-Pawn" || pieceName=="Black-Pawn")
+                {
+                    vis.movementIndicator = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceName=="White-Pawn"? pieceYPos-vis.height/16-10: pieceYPos+vis.height/4-30)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)")
+                    vis.movementIndicator2 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos)
+                        .attr('y1', pieceName=="White-Pawn"?pieceYPos:pieceYPos+vis.height/8)
+                        .attr('y2', pieceName=="White-Pawn"?pieceYPos-vis.height/8-30:pieceYPos+vis.height/4+30)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                }
+                // Rooks
+                else if (pieceName == "White-Rook" || pieceName =="Black-Rook"){
+                    vis.movementIndicator = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceName=="White-Rook"?pieceYPos-vis.height+100:pieceYPos+vis.height-50)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    vis.movementIndicator2 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', ((pieceId=="White-Rook0") || (pieceId=="Black-Rook0")) ?pieceXPos + vis.width-60: pieceXPos - vis.width+60)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceYPos+vis.height/16)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                }
+                //Bishops
+                else if (pieceName=="White-Bishop" || pieceName=="Black-Bishop")
+                {
+                    vis.movementIndicator = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', (d) => {
+                            if (pieceId == "White-Bishop0"){
+                                return pieceXPos - vis.width/4
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceXPos - vis.width/2-80
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceXPos - vis.width/4-5
+                            }
+                            else
+                            {
+                                return pieceXPos - vis.width/2-80
+                            }}
+                        )
+                        .attr('y1', pieceYPos + vis.height/16)
+                        .attr('y2', (d) => {
+                            if (pieceId == "White-Bishop0"){
+                                return pieceYPos-vis.height/4+40
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceYPos-vis.height/2-45
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceYPos+vis.height/4+40
+                            }
+                            else
+                            {
+                                return pieceYPos+vis.height/2+105
+                            }
+
+                        } )
+
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    vis.movementIndicator2 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', (d)=>{
+                            if (pieceId == "White-Bishop0"){
+                                return pieceXPos + vis.width/2+60
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceXPos + vis.width/4-5
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceXPos + vis.width/2+60
+                            }
+                            else
+                            {
+                                return pieceXPos + vis.width/4+5
+                            }
+                        })
+                        .attr('y1', pieceYPos + vis.height/16)
+                        .attr('y2', (d) => {
+                            if (pieceId == "White-Bishop0"){
+                                return pieceYPos-vis.height/2-25
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceYPos-vis.height/4+40
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceYPos+vis.height/2+90
+                            }
+                            else
+                            {
+                                return pieceYPos+vis.height/4+40
+                            }
+                        } )
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                }
+                // Knights
+                else if (pieceName=="White-Knight" || pieceName=="Black-Knight")
+                {
+                    vis.movementIndicator = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos)
+                        .attr('y1', pieceName=="White-Knight"?pieceYPos+vis.height/16:pieceYPos+vis.height/16)
+                        .attr('y2', pieceName=="White-Knight"?pieceYPos-vis.height/8-30:pieceYPos+vis.height/4+30)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10);
+                    // Side Arrows
+                    vis.movementIndicator2 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos + vis.width/8)
+                        .attr('y1', pieceName=="White-Knight"?pieceYPos-vis.height/8-30:pieceYPos+vis.height/4+30)
+                        .attr('y2', pieceName=="White-Knight"?pieceYPos-vis.height/8-30:pieceYPos+vis.height/4+30 )
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator3 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos - vis.width/8)
+                        .attr('y1', pieceName=="White-Knight"?pieceYPos-vis.height/8-30:pieceYPos+vis.height/4+30)
+                        .attr('y2', pieceName=="White-Knight"?pieceYPos-vis.height/8-30:pieceYPos+vis.height/4+30 )
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                }
+                // King
+                else if (pieceName=="White-King" || pieceName=="Black-King")
+                {
+                    vis.movementIndicator = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos)
+                        .attr('y1', pieceYPos + vis.height/16 )
+                        .attr('y2', pieceName=="White-King"? pieceYPos-vis.height/16: pieceYPos + vis.height/8+30)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator2 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos + vis.width/8)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceYPos+vis.height/16)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator3 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos - vis.width/8)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceYPos+vis.height/16)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator4 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos - vis.width/8)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceName=="White-King"?pieceYPos-vis.height/16:pieceYPos + vis.height/8+30 )
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator5 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos + vis.width/8)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceName=="White-King"?pieceYPos-vis.height/16:pieceYPos + vis.height/8+30 )
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                }
+                // Queen
+                else if (pieceName=="White-Queen" || pieceName=="Black-Queen")
+                {
+                    vis.movementIndicator = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos)
+                        .attr('y1', pieceYPos + vis.height/16 )
+                        .attr('y2', pieceName=="White-Queen"? pieceYPos-vis.height+100:pieceYPos+vis.height-50)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator2 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos + vis.width/2)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceYPos+vis.height/16)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator3 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos - vis.width/3-25)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceYPos+vis.height/16)
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator4 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos - vis.width/3-15)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceName=="White-Queen"?pieceYPos-vis.height/3+15:pieceYPos + vis.height/3+45 )
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                    // Side Arrows
+                    vis.movementIndicator5 = vis.svg.append('line')
+                        .attr('x1', pieceXPos)
+                        .attr('x2', pieceXPos + vis.width/2)
+                        .attr('y1', pieceYPos+vis.height/16)
+                        .attr('y2', pieceName=="White-Queen"?pieceYPos-vis.height/2+30:pieceYPos + vis.height/2+30 )
+                        .attr("stroke","goldenrod")
+                        .attr("stroke-width",10)
+                        .attr("marker-end","url(#arrow)");
+                }
+
+
+
+
+
             })
             .on('mouseout', function (event, d) {
                 d3.select(this)
@@ -268,6 +529,30 @@ class Chessboard {
                     .style("left", 0)
                     .style("top", 0)
                     .html(``);
+                if (vis.movementIndicator)
+                {
+                    vis.movementIndicator.remove()
+                }
+                if (vis.movementIndicator2)
+                {
+                    vis.movementIndicator2.remove()
+                }
+                if (vis.movementIndicator3)
+                {
+                    vis.movementIndicator3.remove()
+                }
+                if (vis.movementIndicator4)
+                {
+                    vis.movementIndicator4.remove()
+                }
+                if (vis.movementIndicator5)
+                {
+                    vis.movementIndicator5.remove()
+                }
+
+
+
+
             });
 
 

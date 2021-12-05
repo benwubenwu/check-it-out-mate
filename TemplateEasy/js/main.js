@@ -148,7 +148,7 @@ function createVis(data) {
 
 
     /// Initializing the Chess Board to visualize the different pieces
-    let chessboard_pieces = new Chessboard('chessboard_pieces', chessBoard, pieceDisplayData, []);
+    let chessboard_pieces = new CustomChessboard('chessboard_pieces', chessBoard, pieceDisplayData, []);
 
 }
 

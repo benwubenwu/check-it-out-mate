@@ -27,7 +27,7 @@ class OpeningVis {
         vis.margin = { top: 20, right: 0, bottom: 120, left: 140 };
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right,
-            vis.height = 500 - vis.margin.top - vis.margin.bottom;
+            vis.height = 325 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -40,7 +40,7 @@ class OpeningVis {
         // Scales and axes
         vis.x = d3.scaleBand()
             .rangeRound([0, vis.width])
-            .paddingInner(0.2)
+            .paddingInner(0.4)
 
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
@@ -50,7 +50,8 @@ class OpeningVis {
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y)
-            .tickFormat(percentFormatter);
+            .tickFormat(percentFormatter)
+            .ticks(5);
 
         vis.svg.append("g")
             .attr("class", "opening-x-axis")
@@ -62,7 +63,7 @@ class OpeningVis {
         // Axis title
         vis.svg.append("text")
             .attr("x", -50)
-            .attr("y", -8)
+            .attr("y", -10)
             .text(d => {
                 if (vis.player_color == "white") {
                     return "Most Popular First Moves for White"
@@ -70,7 +71,8 @@ class OpeningVis {
                     return "Most Popular First Moves for Black"
                 }
             }
-            );
+            )
+            .attr("style", "font-size: 14px; fill: #b7b7b6; font-weight: bold;"); 
 
         vis.svg.append("text")
             .attr("class", "y-label")
@@ -78,7 +80,8 @@ class OpeningVis {
 			.attr("x", -vis.height / 2)
 			.attr("y", -50)
 			.attr("text-anchor", "middle")
-            .text("Percentage of Games Played");
+            .text("Percentage of Games Played")
+            .attr("style", "font-size: 10px; fill: #b7b7b6");
         
         vis.minRating = d3.min(vis.data, d=>d.white_elo);
         vis.maxRating = d3.max(vis.data, d=>d.white_elo);
@@ -138,6 +141,20 @@ class OpeningVis {
             .text("Years")
 
         timeSliderArea.call(vis.timeSlider);
+
+        var board2 = d3chessboard()
+            // .fen(fenstring)
+            .size(600)
+            .textopacity(0.5)
+            // .whitecellcolor("#FFFCED")
+            // .blackcellcolor("#424b35")
+            .whitecellcolor("#FAFAFA")
+            .blackcellcolor("#CCC");
+
+        // d3.select("#opening-moves-tooltip").call(board2);
+
+        var board2 = Chessboard('opening-moves-tooltip', 'start');
+
         // (Filter, aggregate, modify data)
         vis.wrangleData();
     }
@@ -224,9 +241,9 @@ class OpeningVis {
 
         bars.enter().append("rect")
             .attr("class", "bar")
-            .attr("fill", "#FFFCED")
-            .attr("stroke", "#424b35")
-            .attr("stroke-width", 1.5)
+            .attr("fill", "#157394")
+            .attr("stroke", "white")
+            .attr("stroke-width", 1)
             .on("mouseover", vis.showBoard)
             .on("mouseout", vis.hideBoard)
             .merge(bars)
@@ -302,28 +319,109 @@ class OpeningVis {
         };
 
         var fenstring = this.openingMoveToFenString[d.name]
-        var board2 = d3chessboard()
-            .fen(fenstring)
-            .size(400)
-            .textopacity(0.5)
-            .whitecellcolor("#FFFCED")
-            .blackcellcolor("#424b35");
-        d3.select("#opening-moves-tooltip")
-            .attr("style", "display: block");
-        d3.select("#opening-moves-tooltip").call(board2);
+        // var board2 = d3chessboard()
+        //     .fen(fenstring)
+        //     .size(600)
+        //     .textopacity(0.5)
+        //     // .whitecellcolor("#FFFCED")
+        //     // .blackcellcolor("#424b35");
+        //     .whitecellcolor("#FAFAFA")
+        //     .blackcellcolor("#CCC");
+
+        // d3.select("#opening-moves-tooltip").call(board2);
+        var config = {
+            position: fenstring
+        }
+        var board2 = Chessboard('opening-moves-tooltip', 'start');
+        // White's first moves
+        if (d.name == "1. e4 ") {
+            board2.move('e2-e4')
+        }
+        else if (d.name == "1. d4 ") {
+            board2.move('d2-d4')
+        }
+        else if (d.name == "1. Nf3") {
+            board2.move('g1-f3')
+        }
+        else if (d.name == "1. c4 ") {
+            board2.move('c2-c4')
+        }
+        else if (d.name == "1. e3 ") {
+            board2.move('e2-e3')
+        }
+        else if (d.name == "1. d3 ") {
+            board2.move('d2-d3')
+        }
+        else if (d.name == "1. f4 ") {
+            board2.move('f2-f4')
+        }
+        else if (d.name == "1. g3 ") {
+            board2.move('g2-g3')
+        }
+        else if (d.name == "1. c3 ") {
+            board2.move('c2-d3')
+        }
+        // Black's first moves
+        if (d.name == "1. e4 e5 ") {
+            board2.move('e2-e4')
+            board2.move('e7-e5')
+        }
+        else if (d.name == "1. e4 c5 ") {
+            board2.move('e2-e4')
+            board2.move('c7-c5')
+        }
+        else if (d.name == "1. d4 d5 ") {
+            board2.move('d2-d4')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. e4 e6 ") {
+            board2.move('e2-e4')
+            board2.move('e7-e6')
+        }
+        else if (d.name == "1. d4 Nf6") {
+            board2.move('d2-d4')
+            board2.move('g8-f6')
+        }
+        else if (d.name == "1. e4 d5 ") {
+            board2.move('e2-e4')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. Nf3 d5") {
+            board2.move('g1-f3')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. c3 b6 ") {
+            board2.move('c2-c3')
+            board2.move('b7-b6')
+        }
+        else if (d.name == "1. g3 d5 ") {
+            board2.move('g2-g3')
+            board2.move('d7-d5')
+        }
+        else if (d.name == "1. g3 c5 ") {
+            board2.move('g2-g3')
+            board2.move('c7-c5')
+        }
+        else if (d.name == "1. e3 d5 ") {
+            board2.move('e2-e3')
+            board2.move('d7-d5')
+        }
+
+
+        
 
         d3.select(this)
-            .attr('stroke-width', '2px')
-            .attr('stroke', 'black')
-            .attr('fill', '#424b35')
+            .attr('stroke-width', '1px')
+            .attr('stroke', 'white')
+            .attr('fill', 'rgba(173,222,255,0.62)')
     }
 
     hideBoard(event, d) {
-        d3.select("#opening-moves-tooltip")
-            .attr("style", "display: none");
-        
+        // d3.select("#opening-moves-tooltip")
+        //     .attr("style", "display: none");
+        var board2 = Chessboard('opening-moves-tooltip', {position: 'start', moveSpeed: 'slow', snapbackSpeed: 500});
         d3.select(this)
             .attr('stroke-width', '1.5')
-            .attr('fill', '#FFFCED')
+            .attr('fill', '#157394')
     }
 }
