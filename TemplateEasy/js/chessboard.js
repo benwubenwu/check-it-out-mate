@@ -145,8 +145,8 @@ class CustomChessboard {
                 }
                 return vis.Xlabels[i].toLowerCase() +"" + vis.Ylabels[current_row]
             })
-            .attr('fill', (d)=> d==0?'#FFFCED ': '#424b35')
-            .attr('stroke', '#5a381b')
+            .attr('fill', (d)=> d==0?'#f5f5f5': '#157394')
+            .attr('stroke', 'black')
             .attr('x', function(d,i){
                  return i*vis.width/8
             })
