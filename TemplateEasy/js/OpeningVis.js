@@ -50,7 +50,8 @@ class OpeningVis {
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y)
-            .tickFormat(percentFormatter);
+            .tickFormat(percentFormatter)
+            .ticks(5);
 
         vis.svg.append("g")
             .attr("class", "opening-x-axis")
