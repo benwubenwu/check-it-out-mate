@@ -42,7 +42,13 @@ class PlayerVis {
         vis.slider = d3.sliderBottom();
 
         vis.minYear = d3.min(vis.data, d => d.ranking_date);
+
+        // vis.maxYear = new Date();
+        // vis.maxYear.setFullYear(vis.minYear.getFullYear() + 2);
+
+
         vis.maxYear = d3.max(vis.data, d => d.ranking_date);
+
 
         vis.svg.append("defs")
             .append("clipPath")
