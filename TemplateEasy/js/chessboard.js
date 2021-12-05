@@ -218,7 +218,6 @@ class CustomChessboard {
     wrangleData() {
         let vis = this;
         vis.displayData = {}
-        console.log("Piece info data:", vis.pieceInfo)
         vis.pieceInfo.forEach(piece =>{
             let pieceInfo = {
                 'Movement': piece.Movement,
@@ -227,7 +226,6 @@ class CustomChessboard {
             vis.displayData[piece.Name] = pieceInfo
 
         })
-        console.log("Display data", vis.displayData)
 
         // Update the visualization
         vis.updateVis();
@@ -256,7 +254,6 @@ class CustomChessboard {
                 // Getting x and y positions
                 let pieceXPos = parseFloat(pieceInfo.getAttribute('x')) + vis.width/16
                 let pieceYPos = parseFloat(pieceInfo.getAttribute('y'))
-                console.log(pieceId)
 
                 // Create the tooltip
                 d3.select(this)
@@ -301,13 +298,13 @@ class CustomChessboard {
                         .attr('x1', pieceXPos)
                         .attr('x2', pieceXPos)
                         .attr('y1', pieceYPos+vis.height/16)
-                        .attr('y2', pieceName=="White-Rook"?pieceYPos-vis.height/2:pieceYPos+vis.height/2 )
+                        .attr('y2', pieceName=="White-Rook"?pieceYPos-vis.height+100:pieceYPos+vis.height-50)
                         .attr("stroke","goldenrod")
                         .attr("stroke-width",10)
                         .attr("marker-end","url(#arrow)");
                     vis.movementIndicator2 = vis.svg.append('line')
                         .attr('x1', pieceXPos)
-                        .attr('x2', ((pieceId=="White-Rook0") || (pieceId=="Black-Rook0")) ?pieceXPos + vis.width/2 : pieceXPos - vis.width/2 )
+                        .attr('x2', ((pieceId=="White-Rook0") || (pieceId=="Black-Rook0")) ?pieceXPos + vis.width-60: pieceXPos - vis.width+60)
                         .attr('y1', pieceYPos+vis.height/16)
                         .attr('y2', pieceYPos+vis.height/16)
                         .attr("stroke","goldenrod")
@@ -319,17 +316,75 @@ class CustomChessboard {
                 {
                     vis.movementIndicator = vis.svg.append('line')
                         .attr('x1', pieceXPos)
-                        .attr('x2', pieceName=="White-Bishop"?pieceXPos - vis.width/4: pieceXPos - vis.width/4-5)
+                        .attr('x2', (d) => {
+                            if (pieceId == "White-Bishop0"){
+                                return pieceXPos - vis.width/4
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceXPos - vis.width/2-80
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceXPos - vis.width/4-5
+                            }
+                            else
+                            {
+                                return pieceXPos - vis.width/2-80
+                            }}
+                        )
                         .attr('y1', pieceYPos + vis.height/16)
-                        .attr('y2', pieceName=="White-Bishop"?pieceYPos-vis.height/4+40: pieceYPos+vis.height/4+40 )
+                        .attr('y2', (d) => {
+                            if (pieceId == "White-Bishop0"){
+                                return pieceYPos-vis.height/4+40
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceYPos-vis.height/2-45
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceYPos+vis.height/4+40
+                            }
+                            else
+                            {
+                                return pieceYPos+vis.height/2+105
+                            }
+
+                        } )
+
                         .attr("stroke","goldenrod")
                         .attr("stroke-width",10)
                         .attr("marker-end","url(#arrow)");
                     vis.movementIndicator2 = vis.svg.append('line')
                         .attr('x1', pieceXPos)
-                        .attr('x2', pieceName=="White-Bishop"?pieceXPos + vis.width/4-5:pieceXPos + vis.width/4+5 )
+                        .attr('x2', (d)=>{
+                            if (pieceId == "White-Bishop0"){
+                                return pieceXPos + vis.width/2+60
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceXPos + vis.width/4-5
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceXPos + vis.width/2+60
+                            }
+                            else
+                            {
+                                return pieceXPos + vis.width/4+5
+                            }
+                        })
                         .attr('y1', pieceYPos + vis.height/16)
-                        .attr('y2', pieceName=="White-Bishop"?pieceYPos-vis.height/4+40:pieceYPos+vis.height/4+40 )
+                        .attr('y2', (d) => {
+                            if (pieceId == "White-Bishop0"){
+                                return pieceYPos-vis.height/2-25
+                            }
+                            else if(pieceId == "White-Bishop1"){
+                                return pieceYPos-vis.height/4+40
+                            }
+                            else if (pieceId == "Black-Bishop0"){
+                                return pieceYPos+vis.height/2+90
+                            }
+                            else
+                            {
+                                return pieceYPos+vis.height/4+40
+                            }
+                        } )
                         .attr("stroke","goldenrod")
                         .attr("stroke-width",10)
                         .attr("marker-end","url(#arrow)");
@@ -418,14 +473,14 @@ class CustomChessboard {
                         .attr('x1', pieceXPos)
                         .attr('x2', pieceXPos)
                         .attr('y1', pieceYPos + vis.height/16 )
-                        .attr('y2', pieceName=="White-Queen"? pieceYPos-vis.height/4: pieceYPos+vis.height/4+60)
+                        .attr('y2', pieceName=="White-Queen"? pieceYPos-vis.height+100:pieceYPos+vis.height-50)
                         .attr("stroke","goldenrod")
                         .attr("stroke-width",10)
                         .attr("marker-end","url(#arrow)");
                     // Side Arrows
                     vis.movementIndicator2 = vis.svg.append('line')
                         .attr('x1', pieceXPos)
-                        .attr('x2', pieceXPos + vis.width/4)
+                        .attr('x2', pieceXPos + vis.width/2)
                         .attr('y1', pieceYPos+vis.height/16)
                         .attr('y2', pieceYPos+vis.height/16)
                         .attr("stroke","goldenrod")
@@ -434,7 +489,7 @@ class CustomChessboard {
                     // Side Arrows
                     vis.movementIndicator3 = vis.svg.append('line')
                         .attr('x1', pieceXPos)
-                        .attr('x2', pieceXPos - vis.width/4)
+                        .attr('x2', pieceXPos - vis.width/3-25)
                         .attr('y1', pieceYPos+vis.height/16)
                         .attr('y2', pieceYPos+vis.height/16)
                         .attr("stroke","goldenrod")
@@ -443,18 +498,18 @@ class CustomChessboard {
                     // Side Arrows
                     vis.movementIndicator4 = vis.svg.append('line')
                         .attr('x1', pieceXPos)
-                        .attr('x2', pieceXPos - vis.width/4)
+                        .attr('x2', pieceXPos - vis.width/3-15)
                         .attr('y1', pieceYPos+vis.height/16)
-                        .attr('y2', pieceName=="White-Queen"?pieceYPos-vis.height/8 - 30:pieceYPos + vis.height/8+100 )
+                        .attr('y2', pieceName=="White-Queen"?pieceYPos-vis.height/3+15:pieceYPos + vis.height/3+45 )
                         .attr("stroke","goldenrod")
                         .attr("stroke-width",10)
                         .attr("marker-end","url(#arrow)");
                     // Side Arrows
                     vis.movementIndicator5 = vis.svg.append('line')
                         .attr('x1', pieceXPos)
-                        .attr('x2', pieceXPos + vis.width/4)
+                        .attr('x2', pieceXPos + vis.width/2)
                         .attr('y1', pieceYPos+vis.height/16)
-                        .attr('y2', pieceName=="White-Queen"?pieceYPos-vis.height/8-30:pieceYPos + vis.height/8+100 )
+                        .attr('y2', pieceName=="White-Queen"?pieceYPos-vis.height/2+30:pieceYPos + vis.height/2+30 )
                         .attr("stroke","goldenrod")
                         .attr("stroke-width",10)
                         .attr("marker-end","url(#arrow)");
