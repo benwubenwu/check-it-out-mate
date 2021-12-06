@@ -37,6 +37,7 @@ h4 {
 #intro-page {
     background-color: #47494a;
 }
+
 #intro-title {
     text-align: center;
 }
@@ -57,7 +58,7 @@ h4 {
 
 p {
     font-size: 18px;
-    color: #171e13;
+    color: #b7b7b6;
 }
 
 li {
@@ -71,7 +72,7 @@ li {
 .line.unselected {
     stroke: gray;
     opacity: 25%;
-  }
+}
 
 #opening-moves-tooltip {
     margin-left: 4em;

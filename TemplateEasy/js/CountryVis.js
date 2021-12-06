@@ -13,6 +13,16 @@ class CountryVis {
         this.data = _data;
         this.filteredData = this.data;
         this.colors = [
+            '814cb7',
+            'e3e8b0',
+            'b4db54',
+            '04bfda',
+            'b5ccff',
+            'd3ce17',
+            '3fef3a',
+            'd81989',
+            '9cab54',
+            'fdd771',
             'd3ce17',
             '3fef3a',
             'd81989',
@@ -27,16 +37,6 @@ class CountryVis {
             '53c89a',
             '0cbce2',
             'f9bc52',
-            '4b33e9',
-            'bcdee0',
-            'b4db54',
-            '04bfda',
-            'b5ccff',
-            '4298d3',
-            '03cdd0',
-            'd70b35',
-            'c445c1',
-            'fdd771',
             '07c667',
             'f39362',
             '43edeb',
@@ -246,10 +246,33 @@ class CountryVis {
             .attr("class", "y_axis")
     }
 
+    showEditionLine(d) {
+        console.log(d)
+        document.getElementById("title").innerHTML = "Country: " + d[0];
+        const val = d3.max(d[1], d => d.rating);
+        document.getElementById('winner').innerText = "Average rating: " + val.toFixed(2);
+        document.getElementById('year').innerText = "Year: " + '2017';
+    }
+
     showEdition(d) {
+        console.log(d)
         document.getElementById("title").innerHTML = "Country: " + d.country;
         document.getElementById('winner').innerText = "Average rating: " + d.rating.toFixed(2);
         document.getElementById('year').innerText = "Year: " + d.year.getFullYear();
+    }
+
+    handleMouseOver(line, d) {
+        d3.select(line).attr("stroke-width", "3px");
+
+        d3.selectAll(".line:not(#" + line.id + ")").classed('unselected', true);
+        d3.select(line).classed("unselected", false)
+        // console.log(line)
+        this.showEditionLine(d)
+    }
+
+    handleMouseOut(d, i) {
+        d3.select(this).attr("stroke-width", 1.5);
+        d3.selectAll(".line:not(#" + this.id + ")").classed('unselected', false);
     }
 
     /*
@@ -308,6 +331,11 @@ class CountryVis {
         vis.lineGraph.enter()
             .append("path")
             .attr("class", "line")
+            .attr("id", (d, i) => "line" + i)
+            .on("mouseover", function (e, d) {
+                vis.handleMouseOver(this, d)
+            })
+            .on("mouseout", vis.handleMouseOut)
             .merge(vis.lineGraph)
             .transition()
             .duration(800)
@@ -325,6 +353,7 @@ class CountryVis {
             })
             .attr('fill', 'none')
 
+
         vis.lineGraph.exit().remove();
 
         const div = d3.select("#chart-area").append("div")
@@ -334,7 +363,7 @@ class CountryVis {
         const circles = vis.masterGroup.selectAll("circle").data(filtered_data)
         circles.enter().append('circle')
             .data(filtered_data)
-            .attr("fill", "grey")
+            .attr("fill", (d) => `#b7b7b6`)
             .attr('opacity', '0.5')
             .merge(circles)
             .on("click", (e, d) => vis.showEdition(d))
@@ -350,11 +379,6 @@ class CountryVis {
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         })
-            .on("mouseout", function (d) {
-                div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
 
         circles.exit().remove()
 
