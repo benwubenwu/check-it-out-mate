@@ -24,7 +24,7 @@ class PlayerVis {
         // SVG drawing area
         let margin = {top: 40, right: 250, bottom: 60, left: 60};
 
-        vis.width = 700 - margin.left - margin.right,
+        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - margin.left - margin.right,
                 vis.height = 500 - margin.top - margin.bottom;
 
         vis.svg = d3.select("#chart-area").append("svg")
@@ -315,7 +315,18 @@ class PlayerVis {
         d3.select(this).attr("stroke-width", "3px");
 
         d3.selectAll(".line:not(#" + this.id + ")").classed('unselected', true);
-        d3.select(this).classed("unselected", false)
+        d3.select(this).classed("unselected", false);
+
+        // // Show name, peak rating, nationality, rank, birthday
+        // console.log(event, d[1])
+        // d3.select("#player-name").text(d[0])
+        // d3.select("#player-country").text(d[1][0].country)
+        // d3.select("#player-birthdate").text(d[1][0].birth_year)
+        // let games = vis.data.filter(d => d.name == d[0]);
+        // let peakRating = d3.max(games, d => d.rating);
+
+        // d3.select("#player-peak-rating").text(peakRating)
+        // d3.select("#player-rank").text("Grandmaster")
     }
 
     handleMouseOut(d, i) {
