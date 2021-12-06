@@ -250,8 +250,8 @@ class CountryVis {
         console.log(d)
         document.getElementById("title").innerHTML = "Country: " + d[0];
         const val = d3.max(d[1], d => d.rating);
-        document.getElementById('winner').innerText = "Average rating: " + val.toFixed(2);
-        document.getElementById('year').innerText = "Year: " + '2017';
+        document.getElementById('winner').innerText = "Highest average rating: " + val.toFixed(2);
+        document.getElementById('year').innerText = '';
     }
 
     showEdition(d) {
@@ -303,7 +303,16 @@ class CountryVis {
         console.log(filtered_data)
 
         filtered_data = filtered_data.sort((a, b) => a.rating > b.rating)
-        let country = [...new Set(filtered_data.map(d => d.country))]
+
+
+        let meaned_data = d3.rollup(filtered_data, v => d3.mean(v, i => i.rating), d => d.country);
+        meaned_data = Array.from(meaned_data, ([name, value]) => ({name, value}));
+
+        meaned_data = meaned_data.sort((a, b) => d3.descending(a.value, b.value))
+        console.log(meaned_data)
+
+        let country = [...new Set(meaned_data.map(d => d.name))]
+        console.log(country)
         let topten = country.slice(0, 10)
 
         filtered_data = filtered_data.filter(d => topten.includes(d.country))
