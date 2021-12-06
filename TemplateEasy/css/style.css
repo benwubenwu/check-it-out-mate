@@ -106,3 +106,8 @@ li {
 .noUi-handle {
     width: 14px;
 }
+
+.container {
+    /* zoom: 60%; */
+    /* transform: scale(0.6) */
+}

@@ -244,6 +244,27 @@ class CountryVis {
 
         vis.yaxis = vis.svg.append("g")
             .attr("class", "y_axis")
+
+        vis.svg.append("text")
+            .attr("x", -38)
+            .attr("y", -12)
+            .text("Top 7 Performing Countries")
+            .attr("style", "font-size: 14px; fill: #b7b7b6; font-weight: bold;");
+        
+        vis.svg.append("text")
+            .attr("class", "x-label")
+            .attr("transform", "translate(" + vis.width / 2 + ", " + (vis.height + 45) + ")")
+            .attr("text-anchor", "middle")
+            .text("Year")
+            .attr("style", "font-size: 10px; fill: #b7b7b6");
+
+        vis.svg.append("text")
+            .attr("class", "y-label")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -vis.height / 2)
+            .attr("y", -45)
+            .attr("text-anchor", "middle")
+            .attr("style", "font-size: 10px; fill: #b7b7b6");
     }
 
     showEditionLine(d) {
@@ -334,6 +355,27 @@ class CountryVis {
         vis.y.domain([d3.min(filtered_data, d => d.rating), d3.max(filtered_data, d => d.rating)]);
         vis.x.domain([d3.min(filtered_data, d => d.year), d3.max(filtered_data, d => d.year)]);
 
+        // updating axis 
+        d3.select(".y-axis")
+            .transition()
+            .duration(800)
+            .call(d3.axisLeft(vis.y));
+
+        d3.select(".x-axis")
+            .transition()
+            .duration(800)
+            .call(d3.axisBottom(vis.x));
+
+        d3.select(".x-label")
+            .text("Year")
+
+        d3.select(".y-label")
+            .text("Rating (ELO)");
+        // Define custom transition
+        let transition = d3.transition()
+            .duration(800)
+            .ease(d3.easeLinear);
+
         vis.lineGraph = vis.masterGroup.selectAll(".line")
             .data(grouped_data);
 
@@ -380,7 +422,7 @@ class CountryVis {
             .duration(800)
             .attr("cx", d => vis.x(d.year))
             .attr("cy", d => vis.y(d.rating))
-            .attr("r", 7)
+            .attr("r", 5)
 
         circles.on("mouseover", function (d) {
             div.style("opacity", 1)
