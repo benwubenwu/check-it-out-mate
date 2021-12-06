@@ -168,7 +168,7 @@
                     you?
                 </h4>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col">
                     <label>Time Period</label>
                     <div class="row">
@@ -178,6 +178,9 @@
                     </div>
                 </div>
                 <div class="col"></div>
+            </div> -->
+            <div class="row">
+                <div id="brush-vis"></div>
             </div>
             <div class="row">
                 <div class="col">
@@ -369,7 +372,7 @@
         resetSliders: false,
         fadingEffect: false,
         // normalScrollElements: '.scrollable-content',
-        scrollOverflow: true,
+        scrollOverflow: false,
         scrollOverflowReset: false,
         scrollOverflowOptions: null,
         touchSensitivity: 15,
@@ -428,6 +431,7 @@
 <!-- Visualization objects -->
 <script src="js/chessboard.js"></script>
 <script src="js/OpeningVis.js"></script>
+<script src="js/BrushVis.js"></script>
 <script src="js/PlayerVis.js"></script>
 <script src="js/CountryVis.js"></script>
 <script src="js/OpeningMovesVis.js"></script>

@@ -29,6 +29,7 @@ let playerData;
 
 let countryVis;
 let countryData;
+let brushVis;
 
 loadCountryData();
 
@@ -70,6 +71,17 @@ function loadCountryData() {
     });
 }
 
+let eventHandler = {
+    bind: (eventName, handler) => {
+        document.body.addEventListener(eventName, handler);
+    },
+    trigger: (eventName, extraParameters) => {
+        document.body.dispatchEvent(new CustomEvent(eventName, {
+            detail: extraParameters
+        }));
+    }
+}
+
 function loadPlayerData() {
     d3.csv("data/fide_historical.csv", row => {
         row.string_date = row.ranking_date;
@@ -84,8 +96,17 @@ function loadPlayerData() {
         // Store csv in a global variable
         playerData = csv;
         playerVis = new PlayerVis('chart-area', playerData);
+        brushVis = new BrushVis('brush-vis', playerData, eventHandler);
     });
 }
+
+eventHandler.bind("selectionChanged", function(event){
+    let rangeStart = event.detail[0];
+    let rangeEnd = event.detail[1];
+
+    playerVis.onSelectionChange(rangeStart, rangeEnd);
+    brushVis.onSelectionChange(rangeStart, rangeEnd);
+});
 
 function loadOpeningData() {
     d3.csv("data/fics_1999_2020.csv", row => {

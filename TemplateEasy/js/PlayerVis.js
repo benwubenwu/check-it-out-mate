@@ -58,27 +58,27 @@ class PlayerVis {
             .attr("height", vis.height);
         // Create slider
         // Source: https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518
-        vis.slider
-            .min(vis.minYear)
-            .max(vis.maxYear)
-            .width(300)
-            // TODO: Fix formatting
-            .tickFormat(formatDate)
-            .default([vis.minYear, vis.maxYear])
-            .fill('#2196f3')
-            .on('onchange', val => {
-                updateVisualization();
-            });
+        // vis.slider
+        //     .min(vis.minYear)
+        //     .max(vis.maxYear)
+        //     .width(300)
+        //     // TODO: Fix formatting
+        //     .tickFormat(formatDate)
+        //     .default([vis.minYear, vis.maxYear])
+        //     .fill('#2196f3')
+        //     .on('onchange', val => {
+        //         updateVisualization();
+        //     });
 
-        var sliderArea = d3
-            .select('#slider')
-            .append('svg')
-            .attr('width', 500)
-            .attr('height', 100)
-            .append('g')
-            .attr('transform', 'translate(20, 20)');
+        // var sliderArea = d3
+        //     .select('#slider')
+        //     .append('svg')
+        //     .attr('width', 500)
+        //     .attr('height', 100)
+        //     .append('g')
+        //     .attr('transform', 'translate(20, 20)');
 
-        sliderArea.call(vis.slider);
+        // sliderArea.call(vis.slider);
 
         // Axis title
         vis.svg.append("text")
@@ -88,12 +88,12 @@ class PlayerVis {
             .attr("style", "font-size: 14px; fill: #b7b7b6; font-weight: bold;");
 
         vis.svg.append("g")
-            .attr("class", "y-axis")
+            .attr("class", "player-y-axis")
             .call(d3.axisLeft(vis.y));
         vis.svg.append("g")
-            .attr("class", "x-axis")
+            .attr("class", "player-x-axis")
             .attr("transform", "translate(0, " + vis.height + ")")
-            .call(d3.axisBottom(vis.x));
+            .call(d3.axisBottom(vis.x).ticks(8));
 
         vis.svg.append("text")
             .attr("class", "x-label")
@@ -123,12 +123,12 @@ class PlayerVis {
         let vis = this;
 
         // Set minimum year and maximum year based on slider values
-        let arr = vis.slider.value();
-        vis.minYear = arr[0]
-        vis.maxYear = arr[1]
-        let dates = vis.data.map(d => d.string_date);
+        // let arr = vis.slider.value();
+        // vis.minYear = arr[0]
+        // vis.maxYear = arr[1]
+
         vis.filteredData = vis.data.filter(d => d.ranking_date >= vis.minYear && d.ranking_date <= vis.maxYear);
-        console.log("player data", vis.filteredData)
+
         vis.displayData = d3.rollup(vis.filteredData, v => d3.mean(v, i => i.rating), d => d.name);
 
         vis.displayData = Array.from(vis.displayData, ([name, value]) => ({ name, value }));
@@ -139,8 +139,6 @@ class PlayerVis {
         vis.displayData = vis.displayData.slice(0, 10).map(d => d.name)
 
         vis.filteredData = vis.filteredData.filter(d => vis.displayData.includes(d.name));
-
-        // vis.filteredData = vis.filteredData.filter(d => d.rank <= 3);
 
 
         // Update the visualization
@@ -159,15 +157,15 @@ class PlayerVis {
         vis.y.domain([d3.min(vis.filteredData, d => d.rating), d3.max(vis.filteredData, d => d.rating)])
 
         // Update axes
-        d3.select(".y-axis")
+        d3.select(".player-y-axis")
             .transition()
             .duration(800)
             .call(d3.axisLeft(vis.y));
 
-        d3.select(".x-axis")
+        d3.select(".player-x-axis")
             .transition()
             .duration(800)
-            .call(d3.axisBottom(vis.x));
+            .call(d3.axisBottom(vis.x).ticks(8));
 
         d3.select(".x-label")
             .text("Year")
@@ -260,7 +258,7 @@ class PlayerVis {
         vis.lineGraph
             .datum(sumstat)
             .attr("d", vis.lineGraph)
-            .attr("clip-path", "url(#clip)");
+            // .attr("clip-path", "url(#clip)");
 
         vis.legend = vis.svg.selectAll(".legend")
             .data(sumstat);
@@ -331,12 +329,11 @@ class PlayerVis {
 
         // Filter original unfiltered data depending on selected time period (brush)
 
-        // *** TO-DO ***
-        //vis.filteredData = ...
-
-        vis.filteredData = vis.data.filter(function (d) {
-            return d.time >= selectionStart && d.time <= selectionEnd;
-        });
+        vis.minYear = selectionStart;
+        vis.maxYear = selectionEnd;
+        // vis.filteredData = vis.data.filter(function (d) {
+        //     return d.time >= selectionStart && d.time <= selectionEnd;
+        // });
 
 
         vis.wrangleData();
