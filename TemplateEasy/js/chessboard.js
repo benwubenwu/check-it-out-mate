@@ -261,8 +261,8 @@ class CustomChessboard {
                     .attr('fill', 'rgba(173,222,255,0.62)')
                 vis.tooltip
                     .style("opacity", 1)
-                    .style("left", '1200px')
-                    .style("top", '500px')
+                    .style("left", '1100px')
+                    .style("top", '400px')
                     .html(`
                      <div style="border: thin solid grey; width: 300px; border-radius: 5px; background: lightgrey; padding: 20px">
                          <h3 style="color: black">${pieceName}<h3>
