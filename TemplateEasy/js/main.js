@@ -59,11 +59,8 @@ function loadCountryData() {
                 max: 2017,
                 min: 2000
             },
-
             step: 1,
-
             start: [2000, 2017],
-
             connect: true,
         });
 

@@ -89,3 +89,20 @@ li {
 
     text-align: center;
 }
+
+.noUi-connect {
+    width: 10px
+    background-color: #6abedb;
+}
+
+.noUi-horizontal .noUi-handle, .noUi-vertical .noUi-handle {
+    background: #6abedb;
+}
+
+.noUi-target.noUi-horizontal .noUi-tooltip {
+    background-color: #6abedb;
+}
+
+.noUi-handle {
+    width: 14px;
+}
