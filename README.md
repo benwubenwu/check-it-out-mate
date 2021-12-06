@@ -4,4 +4,6 @@ Most relevant code is located in one of `index.html` or `/css`. `Chesseboardjs-1
 all libraries (as well as `d3-chessboard.js`, which we acquired from an open repository). All other code in the /js file
 is code that we wrote.
 
+### URLs
 URL to video:
+
