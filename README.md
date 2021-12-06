@@ -34,5 +34,5 @@ Link to our website: https://benwubenwu.github.io/check-it-out-mate/#firstPage
 
 
 ### URLs
-URL to video:
+URL to video: https://drive.google.com/file/d/1QFIjvgk7I2H0dCBUw1BzaxKZkGBwkm6k/view?usp=sharing
 
