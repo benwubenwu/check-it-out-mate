@@ -326,7 +326,7 @@ class CountryVis {
         filtered_data = filtered_data.sort((a, b) => a.rating > b.rating)
 
 
-        let meaned_data = d3.rollup(filtered_data, v => d3.mean(v, i => i.rating), d => d.country);
+        let meaned_data = d3.rollup(vis.data, v => d3.mean(v, i => i.rating), d => d.country);
         meaned_data = Array.from(meaned_data, ([name, value]) => ({name, value}));
 
         meaned_data = meaned_data.sort((a, b) => d3.descending(a.value, b.value))
@@ -438,7 +438,6 @@ class CountryVis {
 
         vis.legend.enter()
             .append("rect")
-            .merge(vis.legend)
             .attr("class", "legend")
             .attr("width", 20)
             .attr("height", 10)
@@ -456,7 +455,6 @@ class CountryVis {
 
         vis.legendLabels.enter()
             .append("text")
-            .merge(vis.legendLabels)
             .attr("class", "legend-label")
             .attr("x", vis.width + 45)
             .attr("y", (d, i) => i * 20 + 11)

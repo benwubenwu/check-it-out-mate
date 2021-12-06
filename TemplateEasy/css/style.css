@@ -117,10 +117,10 @@ html {
     height: 110vh;
     width: 100vw;
     scroll-snap-align: start;
-    -webkit-transform: scale(0.8);
-    -moz-transform: scale(0.8);
-    -ms-transform: scale(0.8);
-    transform: scale(0.8);
+    /*-webkit-transform: scale(0.8);*/
+    /*-moz-transform: scale(0.8);*/
+    /*-ms-transform: scale(0.8);*/
+    /*transform: scale(0.8);*/
 }
 
 .large-section {
