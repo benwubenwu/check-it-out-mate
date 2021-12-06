@@ -218,9 +218,9 @@ class CountryVis {
     initVis() {
         let vis = this;
         // SVG drawing area
-        let margin = {top: 40, right: 40, bottom: 60, left: 60};
+        let margin = {top: 40, right: 80, bottom: 60, left: 60};
 
-        vis.width = 600 - margin.left - margin.right,
+        vis.width = 700 - margin.left - margin.right,
             vis.height = 500 - margin.top - margin.bottom;
 
         vis.svg = d3.select("#chart-area-2").append("svg")
@@ -432,6 +432,36 @@ class CountryVis {
         })
 
         circles.exit().remove()
+
+        vis.legend = vis.svg.selectAll(".legend")
+            .data(grouped_data);
+
+        vis.legend.enter()
+            .append("rect")
+            .merge(vis.legend)
+            .attr("class", "legend")
+            .attr("width", 20)
+            .attr("height", 10)
+            .attr("x", vis.width + 20)
+            .attr("y", (d, i) => i * 20)
+            .attr("fill", d => {
+                // console.log(d[0]);
+                return `#${vis.colors[color_dict[d[0]]]}`
+            })
+
+        vis.legend.exit().remove()
+
+        vis.legendLabels = vis.svg.selectAll(".legend-label")
+            .data(grouped_data);
+
+        vis.legendLabels.enter()
+            .append("text")
+            .merge(vis.legendLabels)
+            .attr("class", "legend-label")
+            .attr("x", vis.width + 45)
+            .attr("y", (d, i) => i * 20 + 11)
+            .text(d => d[0])
+            .attr("style", "font-size: 14px; fill: #b7b7b6")
 
         const xAxis = d3.axisBottom().tickFormat(d3.timeFormat("%Y"))
             .scale(vis.x)
