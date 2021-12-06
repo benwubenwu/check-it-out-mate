@@ -268,7 +268,7 @@ class CountryVis {
     }
 
     showEditionLine(d) {
-        console.log(d)
+        // console.log(d)
         document.getElementById("title").innerHTML = "Country: " + d[0];
         const val = d3.max(d[1], d => d.rating);
         document.getElementById('winner').innerText = "Highest average rating: " + val.toFixed(2);
@@ -276,7 +276,7 @@ class CountryVis {
     }
 
     showEdition(d) {
-        console.log(d)
+        // console.log(d)
         document.getElementById("title").innerHTML = "Country: " + d.country;
         document.getElementById('winner').innerText = "Average rating: " + d.rating.toFixed(2);
         document.getElementById('year').innerText = "Year: " + d.year.getFullYear();
@@ -304,24 +304,24 @@ class CountryVis {
         let vis = this;
         let new_data = vis.data
         let filtered_data = vis.data
-        console.log(vis.data)
+        // console.log(vis.data)
 
         const values = range.noUiSlider.get()
 
-        console.log(values[0])
-        console.log(values[1])
+        // console.log(values[0])
+        // console.log(values[1])
 
         if (values != undefined) {
             filtered_data = vis.data.filter(d => d.year >= parseYear(parseInt(values[0])) && d.year <= parseYear(parseInt(values[1])))
-            console.log(filtered_data)
-            console.log('filtered data')
+            // console.log(filtered_data)
+            // console.log('filtered data')
         }
         if (vis.data == undefined) {
             return null
         }
 
-        console.log('done')
-        console.log(filtered_data)
+        // console.log('done')
+        // console.log(filtered_data)
 
         filtered_data = filtered_data.sort((a, b) => a.rating > b.rating)
 
@@ -330,10 +330,10 @@ class CountryVis {
         meaned_data = Array.from(meaned_data, ([name, value]) => ({name, value}));
 
         meaned_data = meaned_data.sort((a, b) => d3.descending(a.value, b.value))
-        console.log(meaned_data)
+        // console.log(meaned_data)
 
         let country = [...new Set(meaned_data.map(d => d.name))]
-        console.log(country)
+        // console.log(country)
         let topten = country.slice(0, 10)
 
         filtered_data = filtered_data.filter(d => topten.includes(d.country))
@@ -341,11 +341,11 @@ class CountryVis {
 
         const color_dict = {}
         for (let i = 0; i < 10; i++) {
-            console.log(topten[i])
+            // console.log(topten[i])
             color_dict[topten[i]] = i;
         }
 
-        console.log(color_dict)
+        // console.log(color_dict)
 
         document.getElementById('start').innerText = parseInt(values[0])
 
@@ -398,8 +398,8 @@ class CountryVis {
                     (d[1])
             })
             .attr("stroke", (d) => {
-                console.log(d[0])
-                console.log(color_dict[d[0]]);
+                // console.log(d[0])
+                // console.log(color_dict[d[0]]);
                 return `#${vis.colors[color_dict[d[0]]]}`
             })
             .attr('fill', 'none')

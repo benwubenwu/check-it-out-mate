@@ -92,7 +92,7 @@ function loadPlayerData() {
         row.birth_year = parseYear(row.birth_year);
         return row
     }).then(csv => {
-        console.log(csv)
+        // console.log(csv)
         // Store csv in a global variable
         playerData = csv;
         playerVis = new PlayerVis('chart-area', playerData);
@@ -100,7 +100,7 @@ function loadPlayerData() {
     });
 }
 
-eventHandler.bind("selectionChanged", function(event){
+eventHandler.bind("selectionChanged", function (event) {
     let rangeStart = event.detail[0];
     let rangeEnd = event.detail[1];
 
