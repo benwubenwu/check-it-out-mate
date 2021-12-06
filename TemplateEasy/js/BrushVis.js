@@ -78,39 +78,42 @@ class BrushVis {
 
 		// Axis title
 		vis.svg.append("text")
-			.attr("x", -50)
+			.attr("x", -40)
 			.attr("y", -8)
-			.text("Number of Top FIDE Games Played");
+			.text("Number of Top FIDE Games Played")
+			.attr("style", "font-size: 14px; fill: #b7b7b6; font-weight: bold");
 
 		// Time period labels
-		vis.svg.append("rect")
-			.attr("width", 80)
-			.attr("height", 20)
-			.attr("transform", "translate(5," + -15 + ")")
-			.attr("fill", "lightgray")
+		// vis.svg.append("rect")
+		// 	.attr("width", 80)
+		// 	.attr("height", 20)
+		// 	.attr("transform", "translate(5," + -15 + ")")
+		// 	.attr("fill", "lightgray")
 
-		vis.svg.append("text")
-			.attr("id", "time-period-min")
-			.text(dateFormatter(d3.min(vis.data.map(function (d) { return d.ranking_date; }))))
-			.attr("transform", "translate(10," + 0 + ")");
+		// vis.svg.append("text")
+		// 	.attr("id", "time-period-min")
+		// 	.text(dateFormatter(d3.min(vis.data.map(function (d) { return d.ranking_date; }))))
+		// 	.attr("transform", "translate(10," + 0 + ")");
 
-		vis.svg.append("text")
-			.text("-")
-			.attr("transform", "translate(87.5," + 0 + ")");
+		// vis.svg.append("text")
+		// 	.text("-")
+		// 	.attr("transform", "translate(87.5," + 0 + ")");
 		
-		vis.svg.append("rect")
-			.attr("width", 80)
-			.attr("height", 20)
-			.attr("transform", "translate(95," + -15 + ")")
-			.attr("fill", "lightgray")
-		vis.svg.append("text")
-			.attr("id", "time-period-max")
-			.text(dateFormatter(d3.max(vis.data.map(function (d) { return d.ranking_date; }))))
-			.attr("transform", "translate(100," + 0 + ")");
+		// vis.svg.append("rect")
+		// 	.attr("width", 80)
+		// 	.attr("height", 20)
+		// 	.attr("transform", "translate(95," + -15 + ")")
+		// 	.attr("fill", "lightgray")
+		// vis.svg.append("text")
+		// 	.attr("id", "time-period-max")
+		// 	.text(dateFormatter(d3.max(vis.data.map(function (d) { return d.ranking_date; }))))
+		// 	.attr("transform", "translate(100," + 0 + ")");
 
 		// Append a path for the area function, so that it is later behind the brush overlay
 		vis.timePath = vis.svg.append("path")
-			.attr("class", "area area-time");
+			.attr("class", "area area-time")
+			.attr("style", "fill: #6abedb; stroke: white; opacity: .8")
+			.attr("stroke-width", "1.5");
 
 		// Define the D3 path generator
 		vis.area = d3.area()
