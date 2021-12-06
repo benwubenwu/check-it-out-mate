@@ -79,11 +79,6 @@ li {
     margin-top: 1em;
 }
 
-.section {
-    color: #b7b7b6;
-    font-size: 15px;
-}
-
 
 .nouilabel {
 
@@ -107,7 +102,27 @@ li {
     width: 14px;
 }
 
-.container {
-    /* zoom: 60%; */
-    /* transform: scale(0.6) */
+/*.body {*/
+/*    scroll-snap-type: y mandatory;*/
+/*}*/
+
+html {
+    scroll-snap-type: y mandatory;
 }
+
+.section {
+    color: #b7b7b6;
+    font-size: 15px;
+    height: 110vh;
+    width: 100vw;
+    scroll-snap-align: start;
+}
+
+.large-section {
+    height: 170vh;
+}
+
+.larger-section {
+    height: 190vh
+}
+

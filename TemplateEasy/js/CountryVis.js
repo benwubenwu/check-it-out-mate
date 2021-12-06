@@ -248,9 +248,9 @@ class CountryVis {
         vis.svg.append("text")
             .attr("x", -38)
             .attr("y", -12)
-            .text("Top 7 Performing Countries")
+            .text("Top Performing Countries")
             .attr("style", "font-size: 14px; fill: #b7b7b6; font-weight: bold;");
-        
+
         vis.svg.append("text")
             .attr("class", "x-label")
             .attr("transform", "translate(" + vis.width / 2 + ", " + (vis.height + 45) + ")")
